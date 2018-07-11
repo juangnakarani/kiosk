@@ -16,6 +16,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.juangnakarani.kiosk.adapter.SalesAdapter;
+import com.juangnakarani.kiosk.model.Sales;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private List<Sales> listSales = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +50,12 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new SalesAdapter(myDataset);
+        mAdapter = new SalesAdapter(listSales);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-
-
+        prepareSalesData();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -123,5 +132,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void prepareSalesData(){
+        Sales sales1 = new Sales(BigInteger.valueOf(123123),BigDecimal.valueOf(123000.50), new Date());
+        listSales.add(sales1);
+        Sales sales2 = new Sales(BigInteger.valueOf(222222),BigDecimal.valueOf(540000), new Date());
+        listSales.add(sales2);
+
+        mAdapter.notifyDataSetChanged();
     }
 }
