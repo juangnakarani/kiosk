@@ -14,7 +14,7 @@ import com.juangnakarani.kiosk.model.Sales;
 import java.util.List;
 
 public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SalesViewHoler> {
-//    private String[] mDataset;
+    //    private String[] mDataset;
     private List<Sales> listSales;
 
     public SalesAdapter(List<Sales> sales) {
@@ -34,7 +34,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SalesViewHol
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull SalesViewHoler holder, int position) {
-// - get element from your dataset at this position
+        // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Sales sales = listSales.get(position);
         holder.id.setText(String.valueOf(sales.getID()));
@@ -49,8 +49,9 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SalesViewHol
         return listSales.size();
     }
 
-    public static class SalesViewHoler extends RecyclerView.ViewHolder{
+    public static class SalesViewHoler extends RecyclerView.ViewHolder {
         public TextView id, total, date;
+
         public SalesViewHoler(View v) {
             super(v);
             id = (TextView) v.findViewById(R.id.id);
