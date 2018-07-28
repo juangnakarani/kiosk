@@ -23,7 +23,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     @Override
     public DeviceViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.device_list_row, parent, false);
+                .inflate(R.layout.row_item_device, parent, false);
         return new DeviceViewHoler(itemView);
     }
 
@@ -32,7 +32,6 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         Device device = devices.get(position);
         holder.name.setText(device.getName());
         holder.address.setText(device.getAddress());
-
     }
 
     @Override

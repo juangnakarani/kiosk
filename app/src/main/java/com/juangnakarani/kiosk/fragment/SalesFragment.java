@@ -66,7 +66,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chk fragment", "ïni fragment sales");
+        Log.i("chkEvent","salesFragment onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -76,19 +76,22 @@ public class SalesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("chkEvent","salesFragment onCreateView()");
+
         View view = inflater.inflate(R.layout.fragment_sales, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
+//        viewPager.getAdapter().notifyDataSetChanged();
         // Inflate the layout for this fragment
         return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
+        Log.i("chkEvent","salesFragment onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -97,6 +100,8 @@ public class SalesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.i("chkEvent","salesFragment onAttach()");
+//        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -108,6 +113,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.i("chkEvent","salesFragment onDetach()");
         mListener = null;
     }
 
@@ -129,9 +135,9 @@ public class SalesFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         adapter.addFragment(new ProductAllFragment(), "All");
-        adapter.addFragment(new ProductFoodFragment(), "Makanan");
-        adapter.addFragment(new ProductBeverageFragment(), "Minuman");
-        adapter.addFragment(new ProductOtherFragment(), "dll");
+        adapter.addFragment(new ProductFoodFragment(), "Food");
+        adapter.addFragment(new ProductBeverageFragment(), "Beverage");
+        adapter.addFragment(new ProductOtherFragment(), "Other");
         viewPager.setAdapter(adapter);
     }
 

@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_sales"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Penjualan" />
+            android:title="Sale" />
         <item
             android:id="@+id/nav_devices"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Alat" />
+            android:title="Device" />
         <item
             android:id="@+id/nav_report"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Laporan" />
+            android:title="Report" />
         <item
-            android:id="@+id/nav_setting"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Pengaturan" />
+            android:title="Test" />
     </group>
 
     <!--<item android:title="Communicate">-->

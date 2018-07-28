@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class ProductOtherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("chkEvent","other savedInstanceState()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -64,12 +66,24 @@ public class ProductOtherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("chkEvent","other onCreateView()");
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_product_other, container, false);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // Refresh your fragment here
+            Log.i("chkEvent","other setUserVisibleHint()");
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
+        Log.i("chkEvent","other onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -78,6 +92,7 @@ public class ProductOtherFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.i("chkEvent","other onAttach()");
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -89,6 +104,7 @@ public class ProductOtherFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.i("chkEvent","other onDetach()");
         mListener = null;
     }
 

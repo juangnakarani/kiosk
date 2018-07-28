@@ -4,11 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.juangnakarani.kiosk.R;
+import com.juangnakarani.kiosk.adapter.DeviceAdapter;
+import com.juangnakarani.kiosk.adapter.ProductAdapter;
+import com.juangnakarani.kiosk.model.Category;
+import com.juangnakarani.kiosk.model.Product;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +38,12 @@ public class ProductAllFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Category category;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mProductAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<Product> products = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,12 +81,31 @@ public class ProductAllFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i("chkEvent","allProduct onCreateView()");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_product_all, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
+        mRecyclerView.setHasFixedSize(true);
+
+        mProductAdapter = new ProductAdapter(products);
+        mLayoutManager = new LinearLayoutManager(view.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mProductAdapter);
+
+        products.clear();
+        Product baksoSolo = new Product(1,"Bakso Solo", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
+        products.add(baksoSolo);
+        Product baksoBakar = new Product(2,"Bakso Bakar", BigDecimal.valueOf(10000), 1, new Category(1,"food"));
+        products.add(baksoBakar);
+
+        mProductAdapter.notifyDataSetChanged();
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
+        Log.i("chkEvent","allProduct onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -78,6 +114,8 @@ public class ProductAllFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.i("chkEvent","allProduct onAttach()");
+
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -87,8 +125,19 @@ public class ProductAllFragment extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // Refresh your fragment here
+            Log.i("chkEvent","allProduct setUserVisibleHint()");
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
+        Log.i("chkEvent","allProduct onDetach()");
         mListener = null;
     }
 
