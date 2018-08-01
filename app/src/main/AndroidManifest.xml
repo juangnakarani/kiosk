@@ -22,11 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CashierActivity"
-            android:label="@string/title_activity_cashier"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DeviceListActivity"></activity>
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
 </manifest>

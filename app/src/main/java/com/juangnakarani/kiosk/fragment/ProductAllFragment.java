@@ -96,8 +96,18 @@ public class ProductAllFragment extends Fragment {
         products.clear();
         Product baksoSolo = new Product(1,"Bakso Solo", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
         products.add(baksoSolo);
-        Product baksoBakar = new Product(2,"Bakso Bakar", BigDecimal.valueOf(10000), 1, new Category(1,"food"));
+
+        Product baksoBakar = new Product(2,"Bakso Bakar", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
         products.add(baksoBakar);
+
+        Product esOyen = new Product(3,"Es Oyen", BigDecimal.valueOf(5000), 1, new Category(2,"beverage"));
+        products.add(esOyen);
+
+        Product esTeh = new Product(4,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
+        products.add(esTeh);
+
+        Product tehAnget = new Product(5,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
+        products.add(tehAnget);
 
         mProductAdapter.notifyDataSetChanged();
         return view;

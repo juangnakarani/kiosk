@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DeviceListActivity">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rclv_devices"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    tools:context=".SettingActivity">
+
 </android.support.constraint.ConstraintLayout>

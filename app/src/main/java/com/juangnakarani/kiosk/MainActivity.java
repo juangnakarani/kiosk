@@ -1,12 +1,9 @@
 package com.juangnakarani.kiosk;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -39,7 +36,8 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_REPORT = "report";
     private static final String TAG_SALES = "sales";
     private static final String TAG_DEVICE = "device";
-//    private static final String TAG_NOTIFICATIONS = "notifications";
+    private static final String TAG_SETTING = "setting";
+    //    private static final String TAG_NOTIFICATIONS = "notifications";
 //    private static final String TAG_SETTINGS = "settings";
     public static String CURRENT_TAG = TAG_SALES;
     public static int navItemIndex = 0;
@@ -87,8 +85,8 @@ public class MainActivity extends AppCompatActivity
         txtWebsite = (TextView) navHeader.findViewById(R.id.nav_website);
         imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.nav_img_header_bg);
         imgProfile = (ImageView) navHeader.findViewById(R.id.nav_img_profile);
-        
-        
+
+
         // load nav menu header data
         loadNavHeader();
 
@@ -178,18 +176,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_sales) {
             navItemIndex = 0;
             CURRENT_TAG = TAG_SALES;
-        } else if (id == R.id.nav_devices) {
-            navItemIndex = 1;
-            CURRENT_TAG = TAG_DEVICE;
         } else if (id == R.id.nav_report) {
-            navItemIndex = 2;
+            navItemIndex = 1;
             CURRENT_TAG = TAG_REPORT;
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-
         }
 
         loadHomeFragment();
@@ -260,14 +249,9 @@ public class MainActivity extends AppCompatActivity
                 SalesFragment salesFragment = new SalesFragment();
                 return salesFragment;
             case 1:
-                // movies fragment
-                DeviceFragment deviceFragment = new DeviceFragment();
-                return deviceFragment;
-            case 2:
                 // notifications fragment
                 ReportFragment reportFragment = new ReportFragment();
                 return reportFragment;
-//
 //            case 4:
 //                // settings fragment
 //                SettingsFragment settingsFragment = new SettingsFragment();
