@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_header_business">
+        <Preference
+            android:defaultValue="123"
+            android:key="@string/pref_key_product"
+            android:title="@string/pref_title_product" />
+        <Preference
+            android:defaultValue="123"
+            android:key="@string/pref_key_transaction_pooling"
+            android:title="@string/pref_title_transaction_pooling" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_server">
+        <EditTextPreference
+            android:key="@string/pref_key_server"
+            android:title="@string/pref_title_server"
+            android:defaultValue="@string/pref_default_server"
+            android:summary="@string/pref_default_server"/>
+        <EditTextPreference
+            android:key="@string/pref_key_port"
+            android:title="@string/pref_title_port"
+            android:defaultValue="@string/pref_default_port"
+            android:summary="@string/pref_default_port"/>
+    </PreferenceCategory>
+</PreferenceScreen>
