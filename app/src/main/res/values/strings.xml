@@ -34,6 +34,11 @@
     <string name="pref_summary_about">Opensource Point of Sales for Resto</string>
     <string name="pref_title_version">Version</string>
     <string name="pref_summary_version">1.0</string>
+    <string name="title_activity_product">Products</string>
+
+    <string name="title_dialog_product_new">New Product</string>
+    <string name="title_dialog_product_edit">Edit Product</string>
+
 
 
 </resources>

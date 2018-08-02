@@ -1,8 +1,6 @@
 package com.juangnakarani.kiosk;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -21,9 +19,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.juangnakarani.kiosk.database.ProductContract;
-import com.juangnakarani.kiosk.database.ProductDbHelper;
-import com.juangnakarani.kiosk.fragment.DeviceFragment;
 import com.juangnakarani.kiosk.fragment.ReportFragment;
 import com.juangnakarani.kiosk.fragment.SalesFragment;
 import com.juangnakarani.kiosk.other.CircleTransform;
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         loadNavHeader();
 
         // initializing navigation menu
-//        setUpNavigationView();
+        // setUpNavigationView();
 
         if (savedInstanceState == null) {
             navItemIndex = 0;
@@ -100,17 +95,6 @@ public class MainActivity extends AppCompatActivity
             loadHomeFragment();
         }
 
-        ProductDbHelper mDbHelper = new ProductDbHelper(getApplicationContext());
-        // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-// Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(ProductContract.ProductEntry.COLUMN_NAME, "Bakso");
-        values.put(ProductContract.ProductEntry.COLUMN_QTY_ORDERED, 2);
-
-// Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(ProductContract.ProductEntry.TABLE_NAME, null, values);
     }
 
     private void loadNavHeader() {

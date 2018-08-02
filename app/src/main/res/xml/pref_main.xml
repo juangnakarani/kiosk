@@ -4,7 +4,11 @@
         <Preference
             android:defaultValue="123"
             android:key="@string/pref_key_product"
-            android:title="@string/pref_title_product" />
+            android:title="@string/pref_title_product">
+            <intent
+                android:targetClass="com.juangnakarani.kiosk.ProductActivity"
+                android:targetPackage="com.juangnakarani.kiosk" />
+        </Preference>
         <Preference
             android:defaultValue="123"
             android:key="@string/pref_key_transaction_pooling"
@@ -12,14 +16,14 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_server">
         <EditTextPreference
-            android:key="@string/pref_key_server"
-            android:title="@string/pref_title_server"
             android:defaultValue="@string/pref_default_server"
-            android:summary="@string/pref_default_server"/>
+            android:key="@string/pref_key_server"
+            android:summary="@string/pref_default_server"
+            android:title="@string/pref_title_server" />
         <EditTextPreference
-            android:key="@string/pref_key_port"
-            android:title="@string/pref_title_port"
             android:defaultValue="@string/pref_default_port"
-            android:summary="@string/pref_default_port"/>
+            android:key="@string/pref_key_port"
+            android:summary="@string/pref_default_port"
+            android:title="@string/pref_title_port" />
     </PreferenceCategory>
 </PreferenceScreen>

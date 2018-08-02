@@ -9,6 +9,9 @@ public class Product {
     private int ordered;
     private Category category;
 
+    public Product() {
+    }
+
     public Product(int id, String name, BigDecimal price, int ordered, Category category) {
         this.id = id;
         this.name = name;
