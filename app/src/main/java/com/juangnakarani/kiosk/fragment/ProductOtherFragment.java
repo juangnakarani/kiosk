@@ -4,12 +4,20 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.juangnakarani.kiosk.R;
+import com.juangnakarani.kiosk.adapter.ProductAdapter;
+import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.model.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +38,12 @@ public class ProductOtherFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mProductAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<Product> products = new ArrayList<>();
+    private DbHelper db;
 
     public ProductOtherFragment() {
         // Required empty public constructor
@@ -68,7 +82,24 @@ public class ProductOtherFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i("chkEvent","other onCreateView()");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_other, container, false);
+        View view = inflater.inflate(R.layout.fragment_product, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
+        mRecyclerView.setHasFixedSize(true);
+
+        mProductAdapter = new ProductAdapter(products);
+        mLayoutManager = new LinearLayoutManager(view.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mProductAdapter);
+
+        products.clear();
+        db = new DbHelper(getContext());
+        // Gets the data repository in write mode
+        products.addAll(db.getProductsByCategory(3));
+
+        mProductAdapter.notifyDataSetChanged();
+
+        return view;
     }
 
     @Override

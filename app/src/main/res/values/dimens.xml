@@ -10,5 +10,6 @@
 
     <dimen name="fontsize_title">18sp</dimen>
     <dimen name="fontsize_text">16sp</dimen>
+    <dimen name="textHight">25dp</dimen>
 
 </resources>

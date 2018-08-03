@@ -12,12 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.juangnakarani.kiosk.R;
-import com.juangnakarani.kiosk.adapter.DeviceAdapter;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
+import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Category;
 import com.juangnakarani.kiosk.model.Product;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +45,8 @@ public class ProductAllFragment extends Fragment {
     private List<Product> products = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
+
+    private DbHelper db;
 
     public ProductAllFragment() {
         // Required empty public constructor
@@ -83,7 +84,7 @@ public class ProductAllFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i("chkEvent","allProduct onCreateView()");
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_product_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_product, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
         mRecyclerView.setHasFixedSize(true);
@@ -94,20 +95,23 @@ public class ProductAllFragment extends Fragment {
         mRecyclerView.setAdapter(mProductAdapter);
 
         products.clear();
-        Product baksoSolo = new Product(1,"Bakso Solo", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
-        products.add(baksoSolo);
-
-        Product baksoBakar = new Product(2,"Bakso Bakar", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
-        products.add(baksoBakar);
-
-        Product esOyen = new Product(3,"Es Oyen", BigDecimal.valueOf(5000), 1, new Category(2,"beverage"));
-        products.add(esOyen);
-
-        Product esTeh = new Product(4,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
-        products.add(esTeh);
-
-        Product tehAnget = new Product(5,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
-        products.add(tehAnget);
+//        Product baksoSolo = new Product(1,"Bakso Solo", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
+//        products.add(baksoSolo);
+//
+//        Product baksoBakar = new Product(2,"Bakso Bakar", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
+//        products.add(baksoBakar);
+//
+//        Product esOyen = new Product(3,"Es Oyen", BigDecimal.valueOf(5000), 1, new Category(2,"beverage"));
+//        products.add(esOyen);
+//
+//        Product esTeh = new Product(4,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
+//        products.add(esTeh);
+//
+//        Product tehAnget = new Product(5,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
+//        products.add(tehAnget);
+        db = new DbHelper(getContext());
+        // Gets the data repository in write mode
+        products.addAll(db.getAllProducts());
 
         mProductAdapter.notifyDataSetChanged();
         return view;

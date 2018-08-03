@@ -17,8 +17,10 @@ import android.widget.Toast;
 
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.model.Category;
 import com.juangnakarani.kiosk.model.Product;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,15 +123,25 @@ public class ProductActivity extends AppCompatActivity {
                 } else {
                     // create new note
 //                    createNote(inputNote.getText().toString());
-                    Product p = new Product();
-//                        createProduct(editTextProductID.);
+                    int id = Integer.valueOf(editTextProductID.getText().toString());
+                    String name = editTextProductName.getText().toString();
+                    BigDecimal price = BigDecimal.valueOf(Integer.valueOf(editTextProductPrice.getText().toString()));
+                    Category category = db.getCategoryByID(Integer.valueOf(editTextProductCategory.getText().toString()));
+                    Product p = new Product(id, name, price, category);
+                    createProduct(p);
                 }
             }
         });
     }
 
-    private void createProduct(Product p){
+    private void createProduct(Product p) {
         long id = db.insertProduct(p);
+
+        Product product = db.getProductByID(p.getId());
+        if(product != null){
+            products.add(p);
+            mProductAdapter.notifyDataSetChanged();
+        }
 
 
     }

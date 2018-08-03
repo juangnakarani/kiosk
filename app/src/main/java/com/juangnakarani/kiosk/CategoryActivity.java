@@ -132,8 +132,6 @@ public class CategoryActivity extends AppCompatActivity {
         long id = db.insertCategory(c);
 
         Category category = db.getCategoryByID(c.getId());
-        Log.i("chk get category", String.valueOf(category.getId()));
-        Log.i("chk get category", category.getDescription());
 
         if (category != null) {
             categories.add(category);
