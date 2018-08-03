@@ -1,11 +1,8 @@
 package com.juangnakarani.kiosk;
 
-import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,12 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
-import com.juangnakarani.kiosk.database.DatabaseContract;
-import com.juangnakarani.kiosk.database.ProductDbHelper;
-import com.juangnakarani.kiosk.model.Category;
+import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Product;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +28,7 @@ public class ProductActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Product> products = new ArrayList<>();
 
-    ProductDbHelper productDbHelper;
+    private DbHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +47,9 @@ public class ProductActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mProductAdapter);
 
-        productDbHelper = new ProductDbHelper(getApplicationContext());
+        db = new DbHelper(getApplicationContext());
         // Gets the data repository in write mode
-        products.addAll(productDbHelper.getAllProducts());
+        products.addAll(db.getAllProducts());
 
         mProductAdapter.notifyDataSetChanged();
 
@@ -63,12 +57,12 @@ public class ProductActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNoteDialog(false, null, -1);
+                showProductDialog(false, null, -1);
             }
         });
     }
 
-    private void showNoteDialog(final boolean shouldUpdate, final Product product, final int position) {
+    private void showProductDialog(final boolean shouldUpdate, final Product product, final int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
         View view = layoutInflater.inflate(R.layout.dialog_product, null);
 
@@ -88,7 +82,7 @@ public class ProductActivity extends AppCompatActivity {
             editTextProductID.setText(product.getId());
             editTextProductName.setText(product.getName());
             editTextProductPrice.setText(String.valueOf(product.getPrice()));
-            editTextProductCategory.setText(product.getCategory().getName());
+            editTextProductCategory.setText(product.getCategory().getDescription());
         }
 
 
@@ -135,7 +129,7 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void createProduct(Product p){
-        long id = productDbHelper.insertProduct(p);
+        long id = db.insertProduct(p);
 
 
     }

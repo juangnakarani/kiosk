@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHoler> {
 
-    private List<Category> categories = new ArrayList<>();
+    private List<Category> categories;
 
     public CategoryAdapter(List<Category> categories) {
         this.categories = categories;
@@ -26,12 +26,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public CategoryViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_item_category, parent, false);
-        return new CategoryAdapter.CategoryViewHoler(itemView);
+        return new CategoryViewHoler(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHoler holder, int position) {
         Category category = categories.get(position);
+        holder.id.setText(String.valueOf(category.getId()));
+        holder.description.setText(category.getDescription().toString());
     }
 
     @Override
@@ -40,12 +42,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public class CategoryViewHoler extends RecyclerView.ViewHolder {
-        public TextView id, name;
+        public TextView id, description;
 
         public CategoryViewHoler(View itemView) {
             super(itemView);
             this.id = itemView.findViewById(R.id.category_id);
-            this.name = itemView.findViewById(R.id.category_name);
+            this.description = itemView.findViewById(R.id.category_description);
         }
     }
 }

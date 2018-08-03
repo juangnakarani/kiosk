@@ -46,5 +46,9 @@
     <string name="edit_product_category">Category</string>
     <string name="edit_product_price">Price</string>
 
+    <string name="dialog_title_category_new">New Category</string>
+    <string name="dialog_title_category_edit">Edit Category</string>
+    <string name="edit_category_id">ID</string>
+    <string name="edit_category_description">Description</string>
 
 </resources>

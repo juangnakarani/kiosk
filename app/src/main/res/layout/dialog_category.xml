@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView android:id="@+id/dialog_category_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:fontFamily="sans-serif-medium"
+        android:lineSpacingExtra="8sp"
+        android:text="@string/dialog_title_category_new"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/fontsize_title"
+        android:textStyle="normal" />
+
+    <EditText
+        android:id="@+id/dialog_category_edit_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/edit_category_id"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="1"
+        android:textSize="@dimen/fontsize_text"
+        android:textColorHint="@color/colorHint"></EditText>
+    <EditText
+        android:id="@+id/dialog_category_edit_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/edit_category_description"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="1"
+        android:textSize="@dimen/fontsize_text"
+        android:textColorHint="@color/colorHint"></EditText>
+
+</LinearLayout>
