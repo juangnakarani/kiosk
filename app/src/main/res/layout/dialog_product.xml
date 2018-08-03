@@ -2,32 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView android:id="@+id/dialog_title"
+    <TextView android:id="@+id/dialog_product_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/row_padding_vertical"
         android:fontFamily="sans-serif-medium"
         android:lineSpacingExtra="8sp"
-        android:text="@string/"
+        android:text="@string/dialog_title_product_new"
         android:textColor="@color/colorAccent"
-        android:textSize="@dimen/lbl_new_note_title"
+        android:textSize="@dimen/fontsize_title"
         android:textStyle="normal" />
 
     <EditText
-        android:id="@+id/note"
+        android:id="@+id/dialog_product_edit_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
         android:background="@android:color/transparent"
         android:gravity="top"
-        android:hint="@string/hint_enter_note"
+        android:hint="@string/edit_product_id"
         android:inputType="textCapSentences|textMultiLine"
-        android:lines="4"
-        android:textColorHint="@color/hint_enter_note"
-        android:textSize="@dimen/input_new_note" />
-
+        android:lines="1"
+        android:textSize="@dimen/fontsize_text"
+        android:textColorHint="@color/colorHint"></EditText>
+    <EditText
+        android:id="@+id/dialog_product_edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/edit_product_name"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="1"
+        android:textSize="@dimen/fontsize_text"
+        android:textColorHint="@color/colorHint"></EditText>
+    <EditText
+        android:id="@+id/dialog_product_edit_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/edit_product_category"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="1"
+        android:textSize="@dimen/fontsize_text"
+        android:textColorHint="@color/colorHint"></EditText>
+    <EditText
+        android:id="@+id/dialog_product_edit_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/row_padding_vertical"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/edit_product_price"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="1"
+        android:textSize="@dimen/fontsize_text"
+        android:textColorHint="@color/colorHint"></EditText>
 </LinearLayout>

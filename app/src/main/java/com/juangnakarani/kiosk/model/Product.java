@@ -12,6 +12,13 @@ public class Product {
     public Product() {
     }
 
+    public Product(int id, String name, BigDecimal price, Category category) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
+
     public Product(int id, String name, BigDecimal price, int ordered, Category category) {
         this.id = id;
         this.name = name;

@@ -17,6 +17,9 @@
     <string name="pref_key_product">pref_key_product</string>
     <string name="pref_title_product">Product</string>
 
+    <string name="pref_key_category">pref_key_category</string>
+    <string name="pref_title_category">Category</string>
+
     <string name="pref_key_transaction_pooling">pref_key_product</string>
     <string name="pref_title_transaction_pooling">Transaction Pooling</string>
 
@@ -36,9 +39,12 @@
     <string name="pref_summary_version">1.0</string>
     <string name="title_activity_product">Products</string>
 
-    <string name="title_dialog_product_new">New Product</string>
-    <string name="title_dialog_product_edit">Edit Product</string>
-
+    <string name="dialog_title_product_new">New Product</string>
+    <string name="dialog_title_product_edit">Edit Product</string>
+    <string name="edit_product_id">ID</string>
+    <string name="edit_product_name">Name</string>
+    <string name="edit_product_category">Category</string>
+    <string name="edit_product_price">Price</string>
 
 
 </resources>

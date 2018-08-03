@@ -1,11 +1,13 @@
 package com.juangnakarani.kiosk.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.juangnakarani.kiosk.model.Category;
 import com.juangnakarani.kiosk.model.Product;
 
 import java.math.BigDecimal;
@@ -31,6 +33,42 @@ public class ProductDbHelper extends SQLiteOpenHelper {
 
     public ProductDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public Product getProductByID(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(DatabaseContract.ProductEntity.TABLE_NAME, new String[]{DatabaseContract.ProductEntity.COLUMN_ID, DatabaseContract.ProductEntity.COLUMN_NAME,
+        DatabaseContract.ProductEntity.COLUMN_UNIT_PRICE, DatabaseContract.ProductEntity.COLUMN_CATEGORY}, DatabaseContract.ProductEntity.COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)},null,null,null,null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        //instance new product
+        Product p = new Product(
+                cursor.getInt(cursor.getColumnIndex(DatabaseContract.ProductEntity.COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(DatabaseContract.ProductEntity.COLUMN_NAME)),
+                        BigDecimal.valueOf(cursor.getColumnIndex(DatabaseContract.ProductEntity.COLUMN_UNIT_PRICE)),
+                new Category(Integer.valueOf(cursor.getColumnIndex(DatabaseContract.ProductEntity.COLUMN_CATEGORY)), ""));
+
+
+        return p;
+    }
+
+    public long insertProduct(Product p){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.ProductEntity.COLUMN_ID, p.getId());
+        values.put(DatabaseContract.ProductEntity.COLUMN_NAME, p.getName());
+        values.put(DatabaseContract.ProductEntity.COLUMN_CATEGORY, p.getCategory().getId());
+        values.put(DatabaseContract.ProductEntity.COLUMN_UNIT_PRICE, String.valueOf(p.getPrice()));
+
+        long id = db.insert(DatabaseContract.ProductEntity.TABLE_NAME, null, values);
+
+        return id;
+
     }
 
     public List<Product> getAllProducts(){

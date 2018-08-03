@@ -1,15 +1,22 @@
 package com.juangnakarani.kiosk;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
 import com.juangnakarani.kiosk.database.DatabaseContract;
@@ -62,6 +69,74 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void showNoteDialog(final boolean shouldUpdate, final Product product, final int position) {
+        LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
+        View view = layoutInflater.inflate(R.layout.dialog_product, null);
+
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(ProductActivity.this);
+        alertDialogBuilderUserInput.setView(view);
+
+
+        TextView dialogTitle = view.findViewById(R.id.dialog_product_title);
+        dialogTitle.setText(!shouldUpdate ? getString(R.string.dialog_title_product_new) : getString(R.string.dialog_title_product_edit));
+
+        final EditText editTextProductID = view.findViewById(R.id.dialog_product_edit_id);
+        final EditText editTextProductName = view.findViewById(R.id.dialog_product_edit_name);
+        final EditText editTextProductPrice = view.findViewById(R.id.dialog_product_edit_price);
+        final EditText editTextProductCategory = view.findViewById(R.id.dialog_product_edit_category);
+
+        if (shouldUpdate && product != null) {
+            editTextProductID.setText(product.getId());
+            editTextProductName.setText(product.getName());
+            editTextProductPrice.setText(String.valueOf(product.getPrice()));
+            editTextProductCategory.setText(product.getCategory().getName());
+        }
+
+
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton(shouldUpdate ? "update" : "save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogBox, int id) {
+
+                    }
+                })
+                .setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogBox, int id) {
+                                dialogBox.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilderUserInput.create();
+        alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show toast message when no text is entered
+                if (TextUtils.isEmpty(editTextProductID.getText().toString())) {
+                    Toast.makeText(ProductActivity.this, "Enter note!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    alertDialog.dismiss();
+                }
+
+                // check if user updating note
+                if (shouldUpdate && product != null) {
+                    // update note by it's id
+//                    updateNote(inputNote.getText().toString(), position);
+                } else {
+                    // create new note
+//                    createNote(inputNote.getText().toString());
+                    Product p = new Product();
+//                        createProduct(editTextProductID.);
+                }
+            }
+        });
+    }
+
+    private void createProduct(Product p){
+        long id = productDbHelper.insertProduct(p);
+
 
     }
 

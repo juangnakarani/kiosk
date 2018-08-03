@@ -11,6 +11,14 @@
         </Preference>
         <Preference
             android:defaultValue="123"
+            android:key="@string/pref_key_category"
+            android:title="@string/pref_title_category">
+            <intent
+                android:targetClass="com.juangnakarani.kiosk.CategoryActivity"
+                android:targetPackage="com.juangnakarani.kiosk" />
+        </Preference>
+        <Preference
+            android:defaultValue="123"
             android:key="@string/pref_key_transaction_pooling"
             android:title="@string/pref_title_transaction_pooling" />
     </PreferenceCategory>
