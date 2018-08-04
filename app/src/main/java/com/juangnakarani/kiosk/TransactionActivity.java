@@ -1,28 +1,52 @@
 package com.juangnakarani.kiosk;
 
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.juangnakarani.kiosk.adapter.ProductAdapter;
 import com.juangnakarani.kiosk.adapter.TransactionAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Product;
+import com.juangnakarani.kiosk.other.UnicodeFormatter;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class TransactionActivity extends AppCompatActivity {
+public class TransactionActivity extends AppCompatActivity implements Runnable {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mTrasactionAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Product> products = new ArrayList<>();
     private DbHelper db;
     private TextView mTotal;
+    private String totalText;
+    private Button mPrint;
+
+    private BluetoothSocket mBluetoothSocket;
+    BluetoothDevice mBluetoothDevice;
+    BluetoothAdapter mBluetoothAdapter;
+    private UUID applicationUUID = UUID
+            .fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private ProgressDialog mBluetoothConnectProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +70,123 @@ public class TransactionActivity extends AppCompatActivity {
         Log.i("chk", "must calculated now.....");
         mTotal = findViewById(R.id.total_amount);
         int total = db.calculateTotal();
+        totalText = String.valueOf(total);
         Log.i("chk", "total is " + total);
 
-        mTotal.setText("Total: " + total);
+        mTotal.setText("Total: " + totalText);
+
+
+
+        mPrint = findViewById(R.id.btnPrint);
+
+        mPrint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                mBluetoothDevice = mBluetoothAdapter.getRemoteDevice("DC:0D:30:2B:3E:04");
+
+                mBluetoothConnectProgressDialog = ProgressDialog.show(view.getContext(),
+                        "Connecting...", mBluetoothDevice.getName() + " : "
+                                + mBluetoothDevice.getAddress(), true, false);
+
+                try {
+                    mBluetoothSocket = mBluetoothDevice
+                            .createRfcommSocketToServiceRecord(applicationUUID);
+                    mBluetoothAdapter.cancelDiscovery();
+                    mBluetoothSocket.connect();
+                    mHandler.sendEmptyMessage(0);
+                } catch (IOException e) {
+                    Log.e("chk IOException", "CouldNotConnectToSocket", e);
+                    Toast.makeText(TransactionActivity.this, "Device Not Connected", Toast.LENGTH_LONG).show();
+                    closeSocket(mBluetoothSocket);
+                    return;
+                }
+
+                Thread t = new Thread() {
+                    public void run() {
+                        try {
+                            OutputStream os = mBluetoothSocket
+                                    .getOutputStream();
+                            String BILL = "";
+
+                            BILL = "          Bakso Pionir    \n"
+                                    + "Pionirnya Bakso Solo & Bakar\n " +
+                                    "           Kediri      \n"+
+                                    "    Jl. Airlangga 30 Kediri  \n" +
+                                    "       08123123123123      \n";
+                            BILL = BILL + "--------------------------------\n";
+
+
+                            BILL = BILL + String.format("%1$-4s %2$10s %3$10s", "Qty", "Price", "Total");
+                            BILL = BILL + "\n";
+                            BILL = BILL + "--------------------------------";
+                            for (Product p : products) {
+                                String item = p.getName().toString();
+                                String ordered = String.valueOf(p.getOrdered());
+                                String price = String.valueOf(p.getPrice());
+                                BigDecimal total = p.getPrice().multiply(BigDecimal.valueOf(p.getOrdered()));
+                                BILL = BILL + "\n " + String.format("%1$-10s", "" + item);
+                                BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$10s", ordered, price, total.toString());
+                            }
+                            BILL = BILL + "\n-------------------------------";
+                            BILL = BILL + "\n";
+                            BILL = BILL + String.format("%1$-4s %2$10s %3$10s", "Total", "", totalText);
+                            BILL = BILL + "\n";
+//                            BILL = BILL + "        Total Value:" + "     " + "700.00" + "\n";
+//
+//                            BILL = BILL + "----------------------\n";
+                            BILL = BILL + "\n\n ";
+                            os.write(BILL.getBytes());
+                            //This is printer specific code you can comment ==== > Start
+
+                            // Setting height
+                            int gs = 29;
+                            os.write(intToByteArray(gs));
+                            int h = 104;
+                            os.write(intToByteArray(h));
+                            int n = 162;
+                            os.write(intToByteArray(n));
+
+                            // Setting Width
+                            int gs_width = 29;
+                            os.write(intToByteArray(gs_width));
+                            int w = 119;
+                            os.write(intToByteArray(w));
+                            int n_width = 2;
+                            os.write(intToByteArray(n_width));
+
+                            byte[] open = {27, 112, 48, 55, 121};
+                            os.write(open);
+
+                        } catch (Exception e) {
+                            Log.e("chk print", "printing ", e);
+                        }
+                    }
+                };
+                t.start();
+            }
+        });
+
+    }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            mBluetoothConnectProgressDialog.dismiss();
+            Toast.makeText(TransactionActivity.this, "DeviceConnected", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
+    public static byte intToByteArray(int value) {
+        byte[] b = ByteBuffer.allocate(4).putInt(value).array();
+
+        for (int k = 0; k < b.length; k++) {
+            System.out.println("Selva  [" + k + "] = " + "0x"
+                    + UnicodeFormatter.byteToHex(b[k]));
+        }
+
+        return b[3];
     }
 
     @Override
@@ -57,5 +195,30 @@ public class TransactionActivity extends AppCompatActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void closeSocket(BluetoothSocket nOpenSocket) {
+        try {
+            nOpenSocket.close();
+            Log.i("chk", "SocketClosed");
+        } catch (IOException ex) {
+            Log.i("chk", "CouldNotCloseSocket");
+        }
+    }
+
+    @Override
+    public void run() {
+        Log.i("chkRun", "run form Runnable");
+        try {
+            mBluetoothSocket = mBluetoothDevice
+                    .createRfcommSocketToServiceRecord(applicationUUID);
+            mBluetoothAdapter.cancelDiscovery();
+            mBluetoothSocket.connect();
+//            mHandler.sendEmptyMessage(0);
+        } catch (IOException eConnectException) {
+            Log.i("chk", "CouldNotConnectToSocket", eConnectException);
+            closeSocket(mBluetoothSocket);
+            return;
+        }
     }
 }
