@@ -127,7 +127,7 @@ public class ProductActivity extends AppCompatActivity {
                     String name = editTextProductName.getText().toString();
                     BigDecimal price = BigDecimal.valueOf(Integer.valueOf(editTextProductPrice.getText().toString()));
                     Category category = db.getCategoryByID(Integer.valueOf(editTextProductCategory.getText().toString()));
-                    Product p = new Product(id, name, price, category);
+                    Product p = new Product(id, name, price, 0, category);
                     createProduct(p);
                 }
             }

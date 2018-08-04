@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
@@ -11,19 +12,54 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/row_padding_vertical">
 
-    <TextView
-        android:id="@+id/product_name"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_alignParentTop="true"
-        android:textColor="@color/title"
-        android:textSize="16dp"
-        android:textStyle="bold" />
+        android:layout_centerHorizontal="true"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/product_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/product_name" />
+        <TextView
+            android:id="@+id/product_ordered"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="@color/title"
+            android:textSize="24dp"
+            android:textStyle="bold" />
 
+        <LinearLayout
+            android:id="@+id/product_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="56dp"
+            android:layout_marginRight="56dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textColor="@color/title"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/product_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_name" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/product_decreament"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_clear" />
+    </RelativeLayout>
 </RelativeLayout>
