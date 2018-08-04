@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.juangnakarani.kiosk.adapter.ProductAdapter;
+import com.juangnakarani.kiosk.adapter.ProductCatalogAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Category;
 import com.juangnakarani.kiosk.model.Product;
@@ -44,7 +44,7 @@ public class ProductActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.rclv_product);
         mRecyclerView.setHasFixedSize(true);
 
-        mProductAdapter = new ProductAdapter(products);
+        mProductAdapter = new ProductCatalogAdapter(products);
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mProductAdapter);
