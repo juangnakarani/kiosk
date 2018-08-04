@@ -6,36 +6,27 @@
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:layout_alignParentTop="true"
     android:orientation="vertical"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
+
     android:paddingBottom="0dp"
     android:paddingTop="0dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="66dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:gravity="center">
 
-        <TextView
-            android:id="@+id/product_ordered"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_alignParentTop="true"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:textColor="@color/title"
-            android:textSize="24dp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/product_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp"
+            android:layout_marginLeft="0dp"
             android:gravity="left|center"
             android:orientation="vertical">
 
@@ -52,15 +43,18 @@
                 android:id="@+id/product_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="left"
+                android:textSize="16dp"
                 android:layout_below="@id/product_name" />
-        </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/product_decreament"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_alignParentRight="true"
-            android:background="@null"
-            app:srcCompat="@drawable/ic_clear" />
+            <TextView
+                android:id="@+id/product_total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="16dp"
+                android:textColor="@android:color/holo_red_light"
+                android:layout_below="@id/product_price" />
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

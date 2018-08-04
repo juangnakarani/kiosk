@@ -22,6 +22,16 @@
             android:key="@string/pref_key_transaction_pooling"
             android:title="@string/pref_title_transaction_pooling" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_device">
+        <Preference
+            android:defaultValue="123"
+            android:key="@string/pref_key_printer"
+            android:title="@string/pref_title_printer">
+            <intent
+                android:targetClass="com.juangnakarani.kiosk.PrinterActivity"
+                android:targetPackage="com.juangnakarani.kiosk" />
+        </Preference>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_server">
         <EditTextPreference
             android:defaultValue="@string/pref_default_server"

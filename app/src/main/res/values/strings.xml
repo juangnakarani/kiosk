@@ -23,6 +23,10 @@
     <string name="pref_key_transaction_pooling">pref_key_product</string>
     <string name="pref_title_transaction_pooling">Transaction Pooling</string>
 
+    <string name="pref_header_device">Device</string>
+    <string name="pref_key_printer">pref_key_printer</string>
+    <string name="pref_title_printer">Printer</string>
+
     <string name="pref_header_server">Server</string>
 
     <string name="pref_key_server">pref_key_service</string>

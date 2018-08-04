@@ -1,8 +1,11 @@
 package com.juangnakarani.kiosk.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.juangnakarani.kiosk.R;
+import com.juangnakarani.kiosk.TransactionActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +70,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chkEvent","salesFragment onCreate()");
+        Log.i("chkEvent", "salesFragment onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -76,7 +80,7 @@ public class SalesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chkEvent","salesFragment onCreateView()");
+        Log.i("chkEvent", "salesFragment onCreateView()");
 
         View view = inflater.inflate(R.layout.fragment_sales, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
@@ -84,6 +88,17 @@ public class SalesFragment extends Fragment {
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), TransactionActivity.class);
+                startActivity(intent);
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_INDEFINITE)
+//                        .setAction("Action", null).show();
+            }
+        });
 //        viewPager.getAdapter().notifyDataSetChanged();
         // Inflate the layout for this fragment
         return view;
@@ -91,7 +106,7 @@ public class SalesFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        Log.i("chkEvent","salesFragment onButtonPressed()");
+        Log.i("chkEvent", "salesFragment onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -100,7 +115,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("chkEvent","salesFragment onAttach()");
+        Log.i("chkEvent", "salesFragment onAttach()");
 //        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
@@ -113,7 +128,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("chkEvent","salesFragment onDetach()");
+        Log.i("chkEvent", "salesFragment onDetach()");
         mListener = null;
     }
 

@@ -29,7 +29,13 @@
             android:name=".ProductActivity"
             android:label="@string/title_activity_product"
             android:theme="@style/AppTheme" />
-        <activity android:name=".CategoryActivity" android:label="Category"></activity>
+        <activity
+            android:name=".CategoryActivity"
+            android:label="Category" />
+        <activity
+            android:name=".TransactionActivity"
+            android:label="Transaction" />
+        <activity android:name=".PrinterActivity"></activity>
     </application>
 
 </manifest>

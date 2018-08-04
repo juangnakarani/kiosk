@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".TransactionActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rclv_transaction"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/total_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rclv_transaction"
+        android:gravity="right"
+        android:contentDescription="Total Bayar"
+        android:text="Total: 72000"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_red_light"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@android:style/TextAppearance"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/receive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/total_amount"
+        android:gravity="right"
+        android:ems="10"
+        android:hint="Received"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/check_uang_pas"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Save" />
+
+    <CheckBox
+        android:id="@+id/check_uang_pas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/receive"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Uang Pas" />
+
+
+</RelativeLayout>
