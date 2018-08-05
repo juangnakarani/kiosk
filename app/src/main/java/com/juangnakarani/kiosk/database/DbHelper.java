@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Product.db";
 
     private static final String SQL_CREATE_PRODUCT =
@@ -166,6 +166,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(SQL_CREATE_PRODUCT);
         sqLiteDatabase.execSQL(SQL_CREATE_CATEGORY);
+
     }
 
     @Override
@@ -190,6 +191,17 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return id;
 
+    }
+
+    public void insertDefaultCategory(){
+        Category food = new Category(1, "Bakso");
+        this.insertCategory(food);
+
+        Category beverage = new Category(2, "Minuman");
+        this.insertCategory(beverage);
+
+        Category other = new Category(3, "Lain-lain");
+        this.insertCategory(other);
     }
 
     public List<Category> getAllCategory() {

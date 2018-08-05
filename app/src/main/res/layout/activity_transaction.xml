@@ -30,7 +30,7 @@
         android:visibility="visible" />
 
     <EditText
-        android:id="@+id/receive"
+        android:id="@+id/amount_received"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/total_amount"
@@ -55,7 +55,7 @@
         android:id="@+id/check_uang_pas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/receive"
+        android:layout_below="@id/amount_received"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:text="Uang Pas" />

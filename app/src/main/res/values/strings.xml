@@ -23,13 +23,29 @@
     <string name="pref_key_transaction_pooling">pref_key_product</string>
     <string name="pref_title_transaction_pooling">Transaction Pooling</string>
 
+    <string name="pref_key_kiosk_name">pref_key_kiosk_name</string>
+    <string name="pref_title_kiosk_name">Kiosk</string>
+    <string name="pref_default_kiosk_name">Bakso Pionir</string>
+
+    <string name="pref_key_kiosk_address">pref_key_kiosk_address</string>
+    <string name="pref_title_kiosk_address">Address</string>
+    <string name="pref_default_kiosk_address">Jl. Erlangga No.18, Ngadirejo, Kediri</string>
+
+    <string name="pref_key_kiosk_phone">pref_key_kiosk_phone</string>
+    <string name="pref_title_kiosk_phone">Phone</string>
+    <string name="pref_default_kiosk_phone">085212151533</string>
+
+    <string name="pref_key_kiosk_slogan">pref_key_kiosk_slogan</string>
+    <string name="pref_title_kiosk_slogan">Slogan</string>
+    <string name="pref_default_kiosk_slogan">Pionirnya Bakso Solo &amp; Bakar di Kediri</string>
+
     <string name="pref_header_device">Device</string>
     <string name="pref_key_printer">pref_key_printer</string>
     <string name="pref_title_printer">Printer</string>
 
     <string name="pref_header_server">Server</string>
 
-    <string name="pref_key_server">pref_key_service</string>
+    <string name="pref_key_server">pref_key_server</string>
     <string name="pref_title_server">IP Address</string>
     <string name="pref_default_server">192.168.0.1</string>
 

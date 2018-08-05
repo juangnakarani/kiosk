@@ -4,16 +4,23 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +43,8 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Product> products = new ArrayList<>();
     private DbHelper db;
-    private TextView mTotal;
+    private TextView mTotal, mReceived;
+    private CheckBox mUangPas;
     private String totalText;
     private Button mPrint;
 
@@ -46,6 +54,8 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     private UUID applicationUUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
     private ProgressDialog mBluetoothConnectProgressDialog;
+    private String prefKioskName, prefKioskAddress, prefKioskPhone, prefKioskSlogan;
+    private int total, receivedAmount, changeAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +63,13 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         setContentView(R.layout.activity_transaction);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rclv_transaction);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefKioskName = prefs.getString("pref_key_kiosk_name","Not Found pref_key_kiosk_name");
+        prefKioskAddress = prefs.getString("pref_key_kiosk_address","Not Found pref_key_kiosk_address");
+        prefKioskPhone = prefs.getString("pref_key_kiosk_phone","Not Found pref_key_kiosk_phone");
+        prefKioskSlogan = prefs.getString("pref_key_kiosk_slogan","Not Found pref_key_kiosk_slogan");
+
+        mRecyclerView = findViewById(R.id.rclv_transaction);
         mRecyclerView.setHasFixedSize(true);
 
         mTrasactionAdapter = new TransactionAdapter(products);
@@ -69,19 +85,78 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 
         Log.i("chk", "must calculated now.....");
         mTotal = findViewById(R.id.total_amount);
-        int total = db.calculateTotal();
+        total = db.calculateTotal();
         totalText = String.valueOf(total);
         Log.i("chk", "total is " + total);
 
         mTotal.setText("Total: " + totalText);
 
+        mReceived = findViewById(R.id.amount_received);
+        mUangPas =  findViewById(R.id.check_uang_pas);
+        mUangPas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mReceived.setText(String.valueOf(total));
+            }
+        });
+//        mUangPas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                mReceived.setText(String.valueOf(total));
+//            }
+//        });
+        mReceived.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.i("chk","receive changed");
+                try{
+                    receivedAmount = Integer.parseInt(mReceived.getText().toString());
+                }catch (NumberFormatException ex){
+                    receivedAmount = 0;
+                }
+                if(receivedAmount == total){
+                    Log.i("chk","receive receivedAmount == total");
+                    mUangPas.setChecked(true);
+                }else{
+                    mUangPas.setChecked(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         mPrint = findViewById(R.id.btnPrint);
 
         mPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
+                try{
+                    receivedAmount = Integer.parseInt(mReceived.getText().toString());
+                }catch (NumberFormatException ex){
+                    receivedAmount = 0;
+                }
+
+                if(receivedAmount==0){
+                    Toast.makeText(view.getContext(), "Isikan jumlah dibayar!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                changeAmount = receivedAmount - total;
+
+                Snackbar.make(view, "Uang kembalian: " + changeAmount, Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Action", null).show();
+
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 mBluetoothDevice = mBluetoothAdapter.getRemoteDevice("DC:0D:30:2B:3E:04");
 
@@ -109,11 +184,11 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                     .getOutputStream();
                             String BILL = "";
 
-                            BILL = "          Bakso Pionir    \n"
-                                    + "Pionirnya Bakso Solo & Bakar\n " +
-                                    "           Kediri      \n"+
-                                    "    Jl. Airlangga 30 Kediri  \n" +
-                                    "       08123123123123      \n";
+                            BILL = "\n" +
+                                    prefKioskName + "    \n"
+                                    + prefKioskSlogan + " \n"
+                                    + prefKioskAddress + "  \n"
+                                    + prefKioskPhone +"      \n";
                             BILL = BILL + "--------------------------------\n";
 
 
@@ -128,9 +203,14 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                 BILL = BILL + "\n " + String.format("%1$-10s", "" + item);
                                 BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$10s", ordered, price, total.toString());
                             }
-                            BILL = BILL + "\n-------------------------------";
+                            BILL = BILL + "\n--------------------------------";
                             BILL = BILL + "\n";
                             BILL = BILL + String.format("%1$-4s %2$10s %3$10s", "Total", "", totalText);
+                            BILL = BILL + "\n";
+                            BILL = BILL + String.format("%1$-7s %2$10s %3$8s", "Dibayar", "", receivedAmount);
+                            BILL = BILL + "\n";
+                            BILL = BILL + String.format("%1$-7s %2$10s %3$8s", "kembali", "", changeAmount);
+                            BILL = BILL + "\n";
                             BILL = BILL + "\n";
 //                            BILL = BILL + "        Total Value:" + "     " + "700.00" + "\n";
 //

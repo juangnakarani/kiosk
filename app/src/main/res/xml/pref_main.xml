@@ -21,6 +21,29 @@
             android:defaultValue="123"
             android:key="@string/pref_key_transaction_pooling"
             android:title="@string/pref_title_transaction_pooling" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_kiosk_name"
+            android:key="@string/pref_key_kiosk_name"
+            android:summary="@string/pref_default_kiosk_name"
+            android:title="@string/pref_title_kiosk_name" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_kiosk_address"
+            android:key="@string/pref_key_kiosk_address"
+            android:summary="@string/pref_default_kiosk_address"
+            android:title="@string/pref_title_kiosk_address" />
+
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_kiosk_phone"
+            android:key="@string/pref_key_kiosk_phone"
+            android:summary="@string/pref_default_kiosk_phone"
+            android:title="@string/pref_title_kiosk_phone" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_kiosk_slogan"
+            android:key="@string/pref_key_kiosk_slogan"
+            android:summary="@string/pref_default_kiosk_slogan"
+            android:title="@string/pref_title_kiosk_slogan" />
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_device">
         <Preference

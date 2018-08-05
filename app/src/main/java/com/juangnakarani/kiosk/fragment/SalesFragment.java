@@ -150,8 +150,8 @@ public class SalesFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         adapter.addFragment(new ProductAllFragment(), "All");
-        adapter.addFragment(new ProductFoodFragment(), "Food");
-        adapter.addFragment(new ProductBeverageFragment(), "Beverage");
+        adapter.addFragment(new ProductFoodFragment(), "Bakso");
+        adapter.addFragment(new ProductBeverageFragment(), "Minuman");
         adapter.addFragment(new ProductOtherFragment(), "Other");
         viewPager.setAdapter(adapter);
     }

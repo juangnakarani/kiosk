@@ -50,6 +50,9 @@ public class CategoryActivity extends AppCompatActivity {
 
         db = new DbHelper(getApplicationContext());
         categories.addAll(db.getAllCategory());
+        if(categories.size()==0){
+            db.insertDefaultCategory();
+        }
 
         mCategoryAdapter.notifyDataSetChanged();
 
