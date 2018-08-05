@@ -152,6 +152,12 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                     return;
                 }
 
+                if(receivedAmount<total){
+                    Toast.makeText(view.getContext(), "Kurang bayar!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 changeAmount = receivedAmount - total;
 
                 Snackbar.make(view, "Uang kembalian: " + changeAmount, Snackbar.LENGTH_INDEFINITE)
