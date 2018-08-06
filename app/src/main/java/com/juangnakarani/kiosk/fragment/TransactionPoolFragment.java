@@ -4,22 +4,30 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.juangnakarani.kiosk.R;
+import com.juangnakarani.kiosk.adapter.TransactionPoolAdapter;
+import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.model.TransactionHeader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ReportFragment.OnFragmentInteractionListener} interface
+ * {@link TransactionPoolFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ReportFragment#newInstance} factory method to
+ * Use the {@link TransactionPoolFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ReportFragment extends Fragment {
+public class TransactionPoolFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,7 +39,13 @@ public class ReportFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ReportFragment() {
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mTransactionPoolAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<TransactionHeader> transactionHeaderList = new ArrayList<>();
+    private DbHelper db;
+
+    public TransactionPoolFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +55,11 @@ public class ReportFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ReportFragment.
+     * @return A new instance of fragment TransactionPoolFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ReportFragment newInstance(String param1, String param2) {
-        ReportFragment fragment = new ReportFragment();
+    public static TransactionPoolFragment newInstance(String param1, String param2) {
+        TransactionPoolFragment fragment = new TransactionPoolFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -56,7 +70,6 @@ public class ReportFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chk fragment", "ïni fragment report");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -67,7 +80,33 @@ public class ReportFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_report, container, false);
+        View view = inflater.inflate(R.layout.fragment_transaction_pool, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_transaction_pool);
+        mRecyclerView.setHasFixedSize(false);
+
+        mTransactionPoolAdapter = new TransactionPoolAdapter(transactionHeaderList);
+        mLayoutManager = new LinearLayoutManager(view.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mTransactionPoolAdapter);
+
+        db = new DbHelper(getContext());
+        transactionHeaderList.addAll(db.getAllTransactionHeader());
+
+        mTransactionPoolAdapter.notifyDataSetChanged();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        Log.i("chk", "onResume of TransactionPoolFragment");
+        super.onResume();
+        db = new DbHelper(getContext());
+        transactionHeaderList.clear();
+        transactionHeaderList.addAll(db.getAllTransactionHeader());
+
+        mTransactionPoolAdapter.notifyDataSetChanged();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -80,12 +119,7 @@ public class ReportFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+
     }
 
     @Override

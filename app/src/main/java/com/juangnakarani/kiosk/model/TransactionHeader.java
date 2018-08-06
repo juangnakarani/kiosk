@@ -9,8 +9,7 @@ public class TransactionHeader {
     public TransactionHeader() {
     }
 
-    public TransactionHeader(int id, String datetime, int total, int received) {
-        this.id = id;
+    public TransactionHeader(String datetime, int total, int received) {
         this.datetime = datetime;
         this.total = total;
         this.received = received;

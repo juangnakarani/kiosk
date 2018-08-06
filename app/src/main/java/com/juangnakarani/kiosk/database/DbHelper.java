@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.juangnakarani.kiosk.model.Category;
 import com.juangnakarani.kiosk.model.Product;
+import com.juangnakarani.kiosk.model.TransactionDetail;
+import com.juangnakarani.kiosk.model.TransactionHeader;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "Kiosk.db";
 
     private static final String SQL_CREATE_PRODUCT =
@@ -45,13 +47,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_DROP_APPLICATION_STATE = "DROP TABLE IF EXISTS " + DbContract.ApplicationStateEntity.TABLE_NAME;
 
-    private static final String SQL_CREATE_TRANSACTION_HEADER = "CREATE TABLE " + DbContract.TransactionHeaderEntity.TABLE_NAME + " ( " +
+    private static final String SQL_CREATE_TRANSACTION_HEADER = "CREATE TABLE " + DbContract.TransactionHeaderEntity.TABLE_NAME + " (" +
             DbContract.TransactionHeaderEntity.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             DbContract.TransactionHeaderEntity.COL_DATETIME + " TEXT," +
             DbContract.TransactionHeaderEntity.COL_TOTAL + " INTEGER," +
             DbContract.TransactionHeaderEntity.COL_RECEIVED + " INTEGER)";
 
-    private static final String SQL_CREATE_TRANSACTION_DETAIL = "CREATE TABLE " + DbContract.TransactionDetailEntity.TABLE_NAME + " ( " +
+    private static final String SQL_CREATE_TRANSACTION_DETAIL = "CREATE TABLE " + DbContract.TransactionDetailEntity.TABLE_NAME + " (" +
             DbContract.TransactionDetailEntity.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             DbContract.TransactionDetailEntity.COL_TRANSACTION_ID + " INTEGER," +
             DbContract.TransactionDetailEntity.COL_PRODUCT_ID + " INTEGER," +
@@ -88,7 +90,20 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    public long insertTransactionHeader(TransactionHeader th) {
+        Log.i("chk", "insertTransactionHeader");
 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DbContract.TransactionHeaderEntity.COL_DATETIME, th.getDatetime());
+        values.put(DbContract.TransactionHeaderEntity.COL_TOTAL, th.getTotal());
+        values.put(DbContract.TransactionHeaderEntity.COL_RECEIVED, th.getReceived());
+
+        long id = db.insert(DbContract.TransactionHeaderEntity.TABLE_NAME, null, values);
+        db.close();
+        return id;
+    }
 
     public int getTrasactionState(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -166,6 +181,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 product.setName(cursor.getString(cursor.getColumnIndex(DbContract.ProductEntity.COL_NAME)));
                 product.setPrice(BigDecimal.valueOf(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_PRICE))));
                 product.setOrdered(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_ORDERED)));
+                product.setCategory(getCategoryByID(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_CATEGORY_ID))));
                 products.add(product);
             } while (cursor.moveToNext());
         }
@@ -193,6 +209,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 product.setName(cursor.getString(cursor.getColumnIndex(DbContract.ProductEntity.COL_NAME)));
                 product.setPrice(BigDecimal.valueOf(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_PRICE))));
                 product.setOrdered(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_ORDERED)));
+                product.setCategory(getCategoryByID(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_CATEGORY_ID))));
                 products.add(product);
             } while (cursor.moveToNext());
         }
@@ -220,6 +237,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 product.setName(cursor.getString(cursor.getColumnIndex(DbContract.ProductEntity.COL_NAME)));
                 product.setPrice(BigDecimal.valueOf(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_PRICE))));
                 product.setOrdered(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_ORDERED)));
+                product.setCategory(getCategoryByID(cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_CATEGORY_ID))));
                 products.add(product);
             } while (cursor.moveToNext());
         }
@@ -362,5 +380,74 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(DbContract.ProductEntity.COL_ORDERED, 0);
 
         return db.update(DbContract.ProductEntity.TABLE_NAME, values, null,null);
+    }
+
+    public List<TransactionHeader> getAllTransactionHeader() {
+        List<TransactionHeader> transactionHeaders = new ArrayList<>();
+
+        //query select
+        String query = "SELECT * FROM " + DbContract.TransactionHeaderEntity.TABLE_NAME + " ORDER BY " + DbContract.TransactionHeaderEntity.COL_ID + " DESC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                TransactionHeader th = new TransactionHeader();
+                th.setId(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionHeaderEntity.COL_ID)));
+                th.setDatetime(cursor.getString(cursor.getColumnIndex(DbContract.TransactionHeaderEntity.COL_DATETIME)));
+                th.setTotal(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionHeaderEntity.COL_TOTAL)));
+                th.setReceived(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionHeaderEntity.COL_RECEIVED)));
+
+                transactionHeaders.add(th);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+        Log.i("chk", "getAllTransactionHeader size: " + transactionHeaders.size());
+        return transactionHeaders;
+    }
+
+    public long insertTransactionDetail(long th_id, Product p) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DbContract.TransactionDetailEntity.COL_TRANSACTION_ID, th_id);
+        values.put(DbContract.TransactionDetailEntity.COL_CATEGORY_ID, p.getCategory().getId());
+        values.put(DbContract.TransactionDetailEntity.COL_PRODUCT_ID, p.getId());
+        values.put(DbContract.TransactionDetailEntity.COL_ORDERED, p.getOrdered());
+
+        long id = db.insert(DbContract.TransactionDetailEntity.TABLE_NAME, null, values);
+
+        return id;
+    }
+
+    public List<TransactionDetail> getTransactionDetailByID(long id){
+        List<TransactionDetail> transactionDetails = new ArrayList<>();
+        //query select
+        String query = "SELECT * FROM " + DbContract.TransactionDetailEntity.TABLE_NAME + " WHERE " + DbContract.TransactionDetailEntity.COL_TRANSACTION_ID + " = " + id + " ORDER BY " + DbContract.TransactionHeaderEntity.COL_ID + " DESC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                TransactionDetail td = new TransactionDetail();
+                td.setId(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionDetailEntity.COL_ID)));
+                td.setTransactionID(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionDetailEntity.COL_TRANSACTION_ID)));
+                td.setProductID(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionDetailEntity.COL_PRODUCT_ID)));
+                td.setCategoryID(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionDetailEntity.COL_CATEGORY_ID)));
+                td.setOrdered(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionDetailEntity.COL_ORDERED)));
+                td.setPrice(cursor.getInt(cursor.getColumnIndex(DbContract.TransactionDetailEntity.COL_PRICE)));
+
+                transactionDetails.add(td);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+        Log.i("chk", "getTransactionDetailByID size: " + transactionDetails.size());
+        return transactionDetails;
     }
 }
