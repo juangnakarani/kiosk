@@ -70,7 +70,7 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chkEvent","beverage onCreate()");
+        Log.i("chkEvent", "beverage onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -80,12 +80,12 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chkEvent","beverage onCreateView()");
+        Log.i("chkEvent", "beverage onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
 
         mProductAdapter = new ProductAdapter(products);
         mLayoutManager = new LinearLayoutManager(view.getContext());
@@ -103,11 +103,20 @@ public class ProductBeverageFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        Log.i("chk", "onResume of BeverageFragment");
+        super.onResume();
+        products.clear();
+        products.addAll(db.getProductsByCategory(2));
+        mProductAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh your fragment here
-            Log.i("chkEvent","beverage setUserVisibleHint()");
+            Log.i("chkEvent", "beverage setUserVisibleHint()");
             getFragmentManager().beginTransaction().detach(this).attach(this).commit();
         }
     }
@@ -122,7 +131,7 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("chkEvent","beverage onAttach()");
+        Log.i("chkEvent", "beverage onAttach()");
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -134,7 +143,7 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("chkEvent","beverage onDetach()");
+        Log.i("chkEvent", "beverage onDetach()");
         mListener = null;
     }
 

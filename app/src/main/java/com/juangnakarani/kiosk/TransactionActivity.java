@@ -1,9 +1,11 @@
 package com.juangnakarani.kiosk;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.juangnakarani.kiosk.adapter.TransactionAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.fragment.SalesFragment;
 import com.juangnakarani.kiosk.model.Product;
 import com.juangnakarani.kiosk.other.UnicodeFormatter;
 
@@ -38,6 +41,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class TransactionActivity extends AppCompatActivity implements Runnable {
+    private static final int TRANSACTION_OK = 1;
+    private static final int TRANSACTION_CANCEL = 0;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mTrasactionAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -99,12 +104,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 mReceived.setText(String.valueOf(total));
             }
         });
-//        mUangPas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                mReceived.setText(String.valueOf(total));
-//            }
-//        });
+
         mReceived.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -138,8 +138,6 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         mPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
 
                 try{
                     receivedAmount = Integer.parseInt(mReceived.getText().toString());
@@ -250,9 +248,33 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                     }
                 };
                 t.start();
+
+                long delayMillis = 1000;
+                try {
+                    t.join(delayMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (t.isAlive()) {
+                    Log.i("chk","thread has not finished");
+                } else {
+                    Log.i("chk","thread has finished");
+                    db.setTransactionState(1);
+                }
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        Log.i("chk", "nganu onActivityResult TransactionActivity");
+        super.onActivityResult(requestCode,resultCode,data);
+        for (android.support.v4.app.Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private Handler mHandler = new Handler() {
@@ -279,6 +301,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
+
         }
         return super.onOptionsItemSelected(item);
     }

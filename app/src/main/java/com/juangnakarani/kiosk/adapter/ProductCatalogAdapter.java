@@ -33,6 +33,7 @@ public class ProductCatalogAdapter extends RecyclerView.Adapter<ProductCatalogAd
     @Override
     public void onBindViewHolder(@NonNull ProductCatalogViewHoler holder, int position) {
         Product product = products.get(position);
+        holder.id.setText(String.valueOf(product.getId()));
         holder.name.setText(product.getName());
         holder.price.setText(product.getPrice().toString());
     }
@@ -43,10 +44,11 @@ public class ProductCatalogAdapter extends RecyclerView.Adapter<ProductCatalogAd
     }
 
     public class ProductCatalogViewHoler extends RecyclerView.ViewHolder {
-        private TextView name, price;
+        private TextView id, name, price;
 
         public ProductCatalogViewHoler(View itemView) {
             super(itemView);
+            this.id = itemView.findViewById(R.id.product_id);
             this.name = itemView.findViewById(R.id.product_name);
             this.price = itemView.findViewById(R.id.product_price);
         }

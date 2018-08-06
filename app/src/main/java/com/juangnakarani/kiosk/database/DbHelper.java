@@ -16,8 +16,8 @@ import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "Product.db";
+    public static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "Kiosk.db";
 
     private static final String SQL_CREATE_PRODUCT =
             "CREATE TABLE " + DbContract.ProductEntity.TABLE_NAME + " (" +
@@ -37,8 +37,63 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_DROP_CATEGORY = "DROP TABLE IF EXISTS " + DbContract.CategoryEntity.TABLE_NAME;
 
+    private static final String SQL_CREATE_APPLICATION_STATE = "CREATE TABLE " + DbContract.ApplicationStateEntity.TABLE_NAME + " (" +
+            DbContract.ApplicationStateEntity.COL_KEY + " TEXT PRIMARY KEY," +
+            DbContract.ApplicationStateEntity.COL_VALUE + " INTEGER)";
+
+    private static final String SQL_INSERT_TRANSACTION_RESULT_STATE = "INSERT INTO " + DbContract.ApplicationStateEntity.TABLE_NAME + " ( " + DbContract.ApplicationStateEntity.COL_KEY + ", " + DbContract.ApplicationStateEntity.COL_VALUE + ") VALUES ('key_transaction_status', 0)";
+
+
+    private static final String SQL_DROP_APPLICATION_STATE = "DROP TABLE IF EXISTS " + DbContract.ApplicationStateEntity.TABLE_NAME;
+
+
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.i("chkDb", "onCreate ProductDbHelper");
+
+        sqLiteDatabase.execSQL(SQL_CREATE_PRODUCT);
+        sqLiteDatabase.execSQL(SQL_CREATE_CATEGORY);
+        sqLiteDatabase.execSQL(SQL_CREATE_APPLICATION_STATE);
+        sqLiteDatabase.execSQL(SQL_INSERT_TRANSACTION_RESULT_STATE);
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        // This database is only a cache for online data, so its upgrade policy is
+        // to simply to discard the data and start over
+        Log.i("chkDb", "onUpgrade ProductDbHelper");
+
+        sqLiteDatabase.execSQL(SQL_DROP_PRODUCT);
+        sqLiteDatabase.execSQL(SQL_DROP_CATEGORY);
+        sqLiteDatabase.execSQL(SQL_DROP_APPLICATION_STATE);
+        onCreate(sqLiteDatabase);
+    }
+
+    public int getTrasactionState(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(DbContract.ApplicationStateEntity.TABLE_NAME, new String[]{DbContract.ApplicationStateEntity.COL_KEY, DbContract.ApplicationStateEntity.COL_VALUE,}, DbContract.ApplicationStateEntity.COL_KEY + "=?",
+                new String[]{String.valueOf("key_transaction_status")}, null, null, null, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        return cursor.getInt(cursor.getColumnIndex(DbContract.ApplicationStateEntity.COL_VALUE));
+    }
+
+    public int setTransactionState(int s){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DbContract.ApplicationStateEntity.COL_VALUE, s);
+
+        return db.update(DbContract.ApplicationStateEntity.TABLE_NAME, values, DbContract.ApplicationStateEntity.COL_KEY + " = ?",
+                new String[]{String.valueOf("key_transaction_status")});
     }
 
     public Product getProductByID(int id) {
@@ -157,27 +212,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         return products;
-    }
-
-
-    @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.i("chkDb", "onCreate ProductDbHelper");
-
-        sqLiteDatabase.execSQL(SQL_CREATE_PRODUCT);
-        sqLiteDatabase.execSQL(SQL_CREATE_CATEGORY);
-
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
-        Log.i("chkDb", "onUpgrade ProductDbHelper");
-
-        sqLiteDatabase.execSQL(SQL_DROP_PRODUCT);
-        sqLiteDatabase.execSQL(SQL_DROP_CATEGORY);
-        onCreate(sqLiteDatabase);
     }
 
     public long insertCategory(Category c) {
@@ -302,5 +336,15 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         return total;
+    }
+
+    public int clearTransaction() {
+        Log.i("chkDb", "clearTransaction ");
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DbContract.ProductEntity.COL_ORDERED, 0);
+
+        return db.update(DbContract.ProductEntity.TABLE_NAME, values, null,null);
     }
 }

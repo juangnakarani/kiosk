@@ -71,7 +71,7 @@ public class ProductFoodFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chkEvent","food onCreate()");
+        Log.i("chkEvent", "food onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -81,12 +81,12 @@ public class ProductFoodFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chkEvent","food onCreateView()");
+        Log.i("chkEvent", "food onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
 
         mProductAdapter = new ProductAdapter(products);
         mLayoutManager = new LinearLayoutManager(view.getContext());
@@ -104,18 +104,27 @@ public class ProductFoodFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        Log.i("chk", "onResume of FoodFragment");
+        super.onResume();
+        products.clear();
+        products.addAll(db.getProductsByCategory(1));
+        mProductAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh your fragment here
-            Log.i("chkEvent","food setUserVisibleHint()");
+            Log.i("chkEvent", "food setUserVisibleHint()");
             getFragmentManager().beginTransaction().detach(this).attach(this).commit();
         }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        Log.i("chkEvent","food onButtonPressed()");
+        Log.i("chkEvent", "food onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -124,7 +133,7 @@ public class ProductFoodFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("chkEvent","food onAttach()");
+        Log.i("chkEvent", "food onAttach()");
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -136,7 +145,7 @@ public class ProductFoodFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("chkEvent","food onDetach()");
+        Log.i("chkEvent", "food onDetach()");
         mListener = null;
     }
 
