@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "Kiosk.db";
 
     private static final String SQL_CREATE_PRODUCT =
@@ -37,15 +37,27 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_DROP_CATEGORY = "DROP TABLE IF EXISTS " + DbContract.CategoryEntity.TABLE_NAME;
 
-    private static final String SQL_CREATE_APPLICATION_STATE = "CREATE TABLE " + DbContract.ApplicationStateEntity.TABLE_NAME + " (" +
+    private static final String SQL_CREATE_APPLICATION_STATE = "CREATE TABLE " + DbContract.ApplicationStateEntity.TABLE_NAME + "( " +
             DbContract.ApplicationStateEntity.COL_KEY + " TEXT PRIMARY KEY," +
             DbContract.ApplicationStateEntity.COL_VALUE + " INTEGER)";
 
-    private static final String SQL_INSERT_TRANSACTION_RESULT_STATE = "INSERT INTO " + DbContract.ApplicationStateEntity.TABLE_NAME + " ( " + DbContract.ApplicationStateEntity.COL_KEY + ", " + DbContract.ApplicationStateEntity.COL_VALUE + ") VALUES ('key_transaction_status', 0)";
-
+    private static final String SQL_INSERT_TRANSACTION_RESULT_STATE = "INSERT INTO " + DbContract.ApplicationStateEntity.TABLE_NAME + "("+ DbContract.ApplicationStateEntity.COL_KEY + " , " + DbContract.ApplicationStateEntity.COL_VALUE + ") VALUES ('key_transaction_status', 0)";
 
     private static final String SQL_DROP_APPLICATION_STATE = "DROP TABLE IF EXISTS " + DbContract.ApplicationStateEntity.TABLE_NAME;
 
+    private static final String SQL_CREATE_TRANSACTION_HEADER = "CREATE TABLE " + DbContract.TransactionHeaderEntity.TABLE_NAME + " ( " +
+            DbContract.TransactionHeaderEntity.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            DbContract.TransactionHeaderEntity.COL_DATETIME + " TEXT," +
+            DbContract.TransactionHeaderEntity.COL_TOTAL + " INTEGER," +
+            DbContract.TransactionHeaderEntity.COL_RECEIVED + " INTEGER)";
+
+    private static final String SQL_CREATE_TRANSACTION_DETAIL = "CREATE TABLE " + DbContract.TransactionDetailEntity.TABLE_NAME + " ( " +
+            DbContract.TransactionDetailEntity.COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            DbContract.TransactionDetailEntity.COL_TRANSACTION_ID + " INTEGER," +
+            DbContract.TransactionDetailEntity.COL_PRODUCT_ID + " INTEGER," +
+            DbContract.TransactionDetailEntity.COL_CATEGORY_ID + " INTEGER," +
+            DbContract.TransactionDetailEntity.COL_ORDERED + " INTEGER," +
+            DbContract.TransactionDetailEntity.COL_PRICE + " INTEGER)";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,6 +71,8 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_CATEGORY);
         sqLiteDatabase.execSQL(SQL_CREATE_APPLICATION_STATE);
         sqLiteDatabase.execSQL(SQL_INSERT_TRANSACTION_RESULT_STATE);
+        sqLiteDatabase.execSQL(SQL_CREATE_TRANSACTION_HEADER);
+        sqLiteDatabase.execSQL(SQL_CREATE_TRANSACTION_DETAIL);
 
     }
 
@@ -73,6 +87,8 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_DROP_APPLICATION_STATE);
         onCreate(sqLiteDatabase);
     }
+
+
 
     public int getTrasactionState(){
         SQLiteDatabase db = this.getReadableDatabase();
