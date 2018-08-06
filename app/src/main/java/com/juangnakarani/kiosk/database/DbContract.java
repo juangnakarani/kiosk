@@ -23,6 +23,12 @@ public class DbContract {
         public static final String COL_DESCRIPTION = "description";
     }
 
+    public static class ApplicationStateEntity implements BaseColumns{
+        public static final String TABLE_NAME = "t_application_state";
+        public static final String COL_KEY = "key";
+        public static final String COL_VALUE = "value";
+    }
+
     private DbContract() {
     }
 }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.TransactionActivity;
+import com.juangnakarani.kiosk.database.DbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,9 @@ import java.util.List;
 public class SalesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM1 = "tr_status";
     private static final String ARG_PARAM2 = "param2";
+    public static final int RESULT_OK = -1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -44,6 +46,7 @@ public class SalesFragment extends Fragment {
     private ViewPager viewPager;
 
     private OnFragmentInteractionListener mListener;
+    private DbHelper db;
 
     public SalesFragment() {
         // Required empty public constructor
@@ -70,17 +73,18 @@ public class SalesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chkEvent", "salesFragment onCreate()");
+        Log.i("chk", "salesFragment onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        db = new DbHelper(getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chkEvent", "salesFragment onCreateView()");
+        Log.i("chk", "salesFragment onCreateView()");
 
         View view = inflater.inflate(R.layout.fragment_sales, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
@@ -95,14 +99,42 @@ public class SalesFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), TransactionActivity.class);
                 startActivity(intent);
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_INDEFINITE)
-//                        .setAction("Action", null).show();
+
             }
         });
 //        viewPager.getAdapter().notifyDataSetChanged();
         // Inflate the layout for this fragment
         return view;
     }
+
+    @Override
+    public void onResume() {
+        Log.i("chk", "onResume of AllFragment");
+        super.onResume();
+
+        int tr_state = db.getTrasactionState();
+        if(tr_state==1){
+            db.clearTransaction();
+            int i = db.setTransactionState(0);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+
+        Log.i("chk", "onActivityResult !@#$%^&*() ");
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("result");
+                Log.i("chk", "result transaction: " + result);
+            }
+        }
+    }//onActivityResult
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

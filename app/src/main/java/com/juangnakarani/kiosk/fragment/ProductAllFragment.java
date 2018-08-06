@@ -82,12 +82,12 @@ public class ProductAllFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chkEvent","allProduct onCreateView()");
+        Log.i("chkEvent", "allProduct onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
 
         mProductAdapter = new ProductAdapter(products);
         mLayoutManager = new LinearLayoutManager(view.getContext());
@@ -95,20 +95,7 @@ public class ProductAllFragment extends Fragment {
         mRecyclerView.setAdapter(mProductAdapter);
 
         products.clear();
-//        Product baksoSolo = new Product(1,"Bakso Solo", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
-//        products.add(baksoSolo);
-//
-//        Product baksoBakar = new Product(2,"Bakso Bakar", BigDecimal.valueOf(12000), 1, new Category(1,"food"));
-//        products.add(baksoBakar);
-//
-//        Product esOyen = new Product(3,"Es Oyen", BigDecimal.valueOf(5000), 1, new Category(2,"beverage"));
-//        products.add(esOyen);
-//
-//        Product esTeh = new Product(4,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
-//        products.add(esTeh);
-//
-//        Product tehAnget = new Product(5,"Es Oyen", BigDecimal.valueOf(4000), 1, new Category(2,"beverage"));
-//        products.add(tehAnget);
+
         db = new DbHelper(getContext());
         // Gets the data repository in write mode
         products.addAll(db.getAllProducts());
@@ -117,9 +104,18 @@ public class ProductAllFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        Log.i("chk", "onResume of AllFragment");
+        super.onResume();
+        products.clear();
+        products.addAll(db.getAllProducts());
+        mProductAdapter.notifyDataSetChanged();
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        Log.i("chkEvent","allProduct onButtonPressed()");
+        Log.i("chkEvent", "allProduct onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -128,7 +124,11 @@ public class ProductAllFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("chkEvent","allProduct onAttach()");
+        Log.i("chkEvent", "allProduct onAttach()");
+
+//        products.clear();
+//        products.addAll(db.getAllProducts());
+//        mProductAdapter.notifyDataSetChanged();
 
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
@@ -143,15 +143,16 @@ public class ProductAllFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh your fragment here
-            Log.i("chkEvent","allProduct setUserVisibleHint()");
+            Log.i("chkEvent", "allProduct setUserVisibleHint()");
             getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("chkEvent","allProduct onDetach()");
+        Log.i("chkEvent", "allProduct onDetach()");
         mListener = null;
     }
 
