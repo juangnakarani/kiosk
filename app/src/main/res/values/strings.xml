@@ -20,8 +20,11 @@
     <string name="pref_key_category">pref_key_category</string>
     <string name="pref_title_category">Category</string>
 
-    <string name="pref_key_transaction_pooling">pref_key_product</string>
+    <string name="pref_key_transaction_pooling">pref_key_transaction_pooling</string>
     <string name="pref_title_transaction_pooling">Transaction Pooling</string>
+
+    <string name="pref_key_default_data">pref_key_default_data</string>
+    <string name="pref_title_default_data">Install Default Data</string>
 
     <string name="pref_key_kiosk_name">pref_key_kiosk_name</string>
     <string name="pref_title_kiosk_name">Kiosk</string>
@@ -52,6 +55,14 @@
     <string name="pref_key_port">pref_key_port</string>
     <string name="pref_title_port">Port</string>
     <string name="pref_default_port">9090</string>
+
+    <string name="pref_key_email">pref_key_email</string>
+    <string name="pref_title_email">User Email</string>
+    <string name="pref_default_email"></string>
+
+    <string name="pref_key_password">pref_key_password</string>
+    <string name="pref_title_password">Password</string>
+    <string name="pref_default_password"></string>
 
     <string name="pref_header_about">About</string>
     <string name="pref_summary_about">Opensource Point of Sales for Resto</string>

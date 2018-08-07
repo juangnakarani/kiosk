@@ -17,10 +17,6 @@
                 android:targetClass="com.juangnakarani.kiosk.CategoryActivity"
                 android:targetPackage="com.juangnakarani.kiosk" />
         </Preference>
-        <Preference
-            android:defaultValue="123"
-            android:key="@string/pref_key_transaction_pooling"
-            android:title="@string/pref_title_transaction_pooling" />
         <EditTextPreference
             android:defaultValue="@string/pref_default_kiosk_name"
             android:key="@string/pref_key_kiosk_name"
@@ -43,7 +39,10 @@
             android:key="@string/pref_key_kiosk_slogan"
             android:summary="@string/pref_default_kiosk_slogan"
             android:title="@string/pref_title_kiosk_slogan" />
-
+        <Preference
+            android:defaultValue="5"
+            android:key="@string/pref_key_default_data"
+            android:title="@string/pref_title_default_data" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_device">
         <Preference
@@ -66,5 +65,20 @@
             android:key="@string/pref_key_port"
             android:summary="@string/pref_default_port"
             android:title="@string/pref_title_port" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_email"
+            android:key="@string/pref_key_email"
+            android:summary="@string/pref_default_email"
+            android:title="@string/pref_title_email" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_password"
+            android:key="@string/pref_key_password"
+            android:summary="@string/pref_default_password"
+            android:inputType="textPassword"
+            android:title="@string/pref_title_password" />
+        <Preference
+            android:defaultValue="123"
+            android:key="@string/pref_key_transaction_pooling"
+            android:title="@string/pref_title_transaction_pooling" />
     </PreferenceCategory>
 </PreferenceScreen>

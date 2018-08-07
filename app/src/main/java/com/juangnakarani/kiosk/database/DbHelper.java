@@ -273,7 +273,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertDefaultCategory() {
+    public void installDefaultData(){
         Category food = new Category(1, "Bakso");
         this.insertCategory(food);
 
@@ -282,6 +282,53 @@ public class DbHelper extends SQLiteOpenHelper {
 
         Category other = new Category(3, "Lain-lain");
         this.insertCategory(other);
+        //  food
+        Product baksoBakar = new Product(101, "Bakso Bakar", BigDecimal.valueOf(12000), 0, this.getCategoryByID(1));
+        this.insertProduct(baksoBakar);
+
+        Product baksoSolo = new Product(102, "Bakso Solo", BigDecimal.valueOf(12000), 0, this.getCategoryByID(1));
+        this.insertProduct(baksoSolo);
+
+        Product pentolKasarBesar = new Product(103, "Pentol Kasar Besar", BigDecimal.valueOf(4000), 0, this.getCategoryByID(1));
+        this.insertProduct(pentolKasarBesar);
+
+        Product pentolHalus = new Product(104, "Pentol Halus", BigDecimal.valueOf(2000), 0, this.getCategoryByID(1));
+        this.insertProduct(pentolHalus);
+
+        Product pentolGoreng = new Product(105, "Pentol Goreng", BigDecimal.valueOf(2000), 0, this.getCategoryByID(1));
+        this.insertProduct(pentolGoreng);
+
+        Product tahu = new Product(106, "Tahu", BigDecimal.valueOf(2000), 0, this.getCategoryByID(1));
+        this.insertProduct(tahu);
+
+        Product pangsitGoreng = new Product(107, "Tahu", BigDecimal.valueOf(2000), 0, this.getCategoryByID(1));
+        this.insertProduct(pangsitGoreng);
+
+        // beverage
+        Product esOyen = new Product(201, "Es Oyen", BigDecimal.valueOf(6000), 0, this.getCategoryByID(2));
+        this.insertProduct(esOyen);
+
+        Product esTeh = new Product(202, "Es Teh", BigDecimal.valueOf(3000), 0, this.getCategoryByID(2));
+        this.insertProduct(esTeh);
+
+        Product tehHangat = new Product(203, "Teh Hangat", BigDecimal.valueOf(3000), 0, this.getCategoryByID(2));
+        this.insertProduct(tehHangat);
+
+        Product esJeruk = new Product(204, "Es Jeruk", BigDecimal.valueOf(4000), 0, this.getCategoryByID(2));
+        this.insertProduct(esJeruk);
+
+        Product jerukHangat = new Product(205, "Jeruk Hangat", BigDecimal.valueOf(4000), 0, this.getCategoryByID(2));
+        this.insertProduct(jerukHangat);
+
+        Product airMineral = new Product(206, "Air Mineral", BigDecimal.valueOf(3000), 0, this.getCategoryByID(2));
+        this.insertProduct(airMineral);
+
+        // others
+        Product lontong = new Product(301, "Lontong", BigDecimal.valueOf(2000), 0, this.getCategoryByID(3));
+        this.insertProduct(lontong);
+
+        Product kerupuk = new Product(302, "Kerupuk", BigDecimal.valueOf(1000), 0, this.getCategoryByID(3));
+        this.insertProduct(kerupuk);
     }
 
     public List<Category> getAllCategory() {
