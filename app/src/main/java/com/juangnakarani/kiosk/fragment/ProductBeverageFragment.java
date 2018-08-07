@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +70,7 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chkEvent", "beverage onCreate()");
+//        Log.i("chkEvent", "beverage onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -80,7 +80,7 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chkEvent", "beverage onCreateView()");
+//        Log.i("chkEvent", "beverage onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
@@ -104,7 +104,7 @@ public class ProductBeverageFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i("chk", "onResume of BeverageFragment");
+//        Log.i("chk", "onResume of BeverageFragment");
         super.onResume();
         products.clear();
         products.addAll(db.getProductsByCategory(2));
@@ -116,7 +116,7 @@ public class ProductBeverageFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh your fragment here
-            Log.i("chkEvent", "beverage setUserVisibleHint()");
+//            Log.i("chkEvent", "beverage setUserVisibleHint()");
             getFragmentManager().beginTransaction().detach(this).attach(this).commit();
         }
     }
@@ -131,7 +131,7 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("chkEvent", "beverage onAttach()");
+//        Log.i("chkEvent", "beverage onAttach()");
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -143,7 +143,7 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("chkEvent", "beverage onDetach()");
+//        Log.i("chkEvent", "beverage onDetach()");
         mListener = null;
     }
 

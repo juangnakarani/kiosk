@@ -16,7 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+//import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -85,12 +85,12 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         prefKioskPassword = prefs.getString("pref_key_password","Not Found pref_key_password");
 
         User user = new User("rizki.prisandi@gmail.com", "da9fdb45ec38a06c538689814f069341c95985577c5524c1fe67f991d2a8f52c");
-        Log.i("passwd" , user.getPassword());
+//        Log.i("passwd" , user.getPassword());
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            Log.e("err", "NoSuchAlgorithmException", e);
+//            Log.e("err", "NoSuchAlgorithmException", e);
         }
         md.update(prefKioskPassword.getBytes());
 
@@ -104,13 +104,13 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
             hexString.append(hex);
         }
 
-        Log.i("passwd h" , hexString.toString());
-        Log.i("passwd u" , user.getPassword());
+//        Log.i("passwd h" , hexString.toString());
+//        Log.i("passwd u" , user.getPassword());
         if(prefKioskEmail.equals(user.getEmail()) && hexString.toString().equals(user.getPassword())){
-            Log.i("passwd", "login success");
+//            Log.i("passwd", "login success");
             isAuthenticate = true;
         }else{
-            Log.i("passwd", "login fail");
+//            Log.i("passwd", "login fail");
             isAuthenticate = false;
         }
 
@@ -304,7 +304,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 }
 
                 if (t.isAlive()) {
-                    Log.i("chk","thread has not finished");
+//                    Log.i("chk","thread has not finished");
                 } else {
 //                    Log.i("chk","thread has finished");
                     db.setTransactionState(1);
@@ -318,7 +318,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                         db.insertTransactionDetail(th_id, p);
                     }
                     List<TransactionDetail> transactionDetails = db.getTransactionDetailByID(th_id);
-                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
+//                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
                     try {
                         t.join();
                     } catch (InterruptedException e) {

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +82,7 @@ public class ProductAllFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chkEvent", "allProduct onCreateView()");
+//        Log.i("chkEvent", "allProduct onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
@@ -106,7 +106,7 @@ public class ProductAllFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i("chk", "onResume of AllFragment");
+//        Log.i("chk", "onResume of AllFragment");
         super.onResume();
         products.clear();
         products.addAll(db.getAllProducts());
@@ -115,7 +115,7 @@ public class ProductAllFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        Log.i("chkEvent", "allProduct onButtonPressed()");
+//        Log.i("chkEvent", "allProduct onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -124,7 +124,7 @@ public class ProductAllFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("chkEvent", "allProduct onAttach()");
+//        Log.i("chkEvent", "allProduct onAttach()");
 
 //        products.clear();
 //        products.addAll(db.getAllProducts());
@@ -143,7 +143,7 @@ public class ProductAllFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh your fragment here
-            Log.i("chkEvent", "allProduct setUserVisibleHint()");
+//            Log.i("chkEvent", "allProduct setUserVisibleHint()");
             getFragmentManager().beginTransaction().detach(this).attach(this).commit();
 
         }
@@ -152,7 +152,7 @@ public class ProductAllFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("chkEvent", "allProduct onDetach()");
+//        Log.i("chkEvent", "allProduct onDetach()");
         mListener = null;
     }
 

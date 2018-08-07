@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -116,7 +116,7 @@ public class CategoryActivity extends AppCompatActivity {
                 } else {
                     // create new note
 //                    createNote(inputNote.getText().toString());
-                    Log.i("chk","test new category");
+//                    Log.i("chk","test new category");
                     Category c = new Category();
                     c.setId(Integer.valueOf(editTextCategoryID.getText().toString()));
                     c.setDescription(editTextCategoryDesc.getText().toString());

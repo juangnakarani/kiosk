@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
+//import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -51,12 +51,12 @@ public class ProductActivity extends AppCompatActivity implements IClickListener
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, mRecyclerView, new IClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Log.i("chk", "onClick mRecyclerView");
+//                Log.i("chk", "onClick mRecyclerView");
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                Log.i("chk", "onLongClick mRecyclerView");
+//                Log.i("chk", "onLongClick mRecyclerView");
                 showProductDialog(
                         true, products.get(position), position
                 );
@@ -171,7 +171,7 @@ public class ProductActivity extends AppCompatActivity implements IClickListener
         product.setPrice(p.getPrice());
 
         int i = db.updateProduct(product);
-        Log.i("chk", "update return->" + i);
+//        Log.i("chk", "update return->" + i);
         if(i==1){
             mProductAdapter.notifyDataSetChanged();
         }
@@ -187,12 +187,12 @@ public class ProductActivity extends AppCompatActivity implements IClickListener
 
     @Override
     public void onClick(View view, int position) {
-        Log.i("chk", "test onClick Override product activity " + position);
+//        Log.i("chk", "test onClick Override product activity " + position);
     }
 
     @Override
     public void onLongClick(View view, int position) {
-        Log.i("chk", "test onLongClick Override product activity" + position);
+//        Log.i("chk", "test onLongClick Override product activity" + position);
     }
 
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {

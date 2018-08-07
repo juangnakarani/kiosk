@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+//import android.util.Log;
 
 import com.juangnakarani.kiosk.model.Category;
 import com.juangnakarani.kiosk.model.Product;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Kiosk.db";
 
     private static final String SQL_CREATE_PRODUCT =
@@ -67,7 +67,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.i("chkDb", "onCreate ProductDbHelper");
+//        Log.i("chkDb", "onCreate ProductDbHelper");
 
         sqLiteDatabase.execSQL(SQL_CREATE_PRODUCT);
         sqLiteDatabase.execSQL(SQL_CREATE_CATEGORY);
@@ -82,7 +82,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        Log.i("chkDb", "onUpgrade ProductDbHelper");
+//        Log.i("chkDb", "onUpgrade ProductDbHelper");
 
         sqLiteDatabase.execSQL(SQL_DROP_PRODUCT);
         sqLiteDatabase.execSQL(SQL_DROP_CATEGORY);
@@ -91,7 +91,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public long insertTransactionHeader(TransactionHeader th) {
-        Log.i("chk", "insertTransactionHeader");
+//        Log.i("chk", "insertTransactionHeader");
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -177,7 +177,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<Product> getAllProducts() {
-        Log.i("chkDb", "getAllProducts ProductDbHelper");
+//        Log.i("chkDb", "getAllProducts ProductDbHelper");
         List<Product> products = new ArrayList<>();
 
         //query select
@@ -205,7 +205,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<Product> getProductsByCategory(int id) {
-        Log.i("chkDb", "getAllProducts ProductDbHelper");
+//        Log.i("chkDb", "getAllProducts ProductDbHelper");
         List<Product> products = new ArrayList<>();
 
         //query select
@@ -233,7 +233,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<Product> getOrdered() {
-        Log.i("chkDb", "getAllProducts ProductDbHelper");
+//        Log.i("chkDb", "getAllProducts ProductDbHelper");
         List<Product> products = new ArrayList<>();
 
         //query select
@@ -380,7 +380,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Product p = this.getProductByID(id);
         int ordered = p.getOrdered() + 1;
 
-        Log.i("chkDb", "incrementOrder " + id);
+//        Log.i("chkDb", "incrementOrder " + id);
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -400,7 +400,7 @@ public class DbHelper extends SQLiteOpenHelper {
             return 0;
         }
 
-        Log.i("chkDb", "incrementOrder " + id);
+//        Log.i("chkDb", "incrementOrder " + id);
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -425,14 +425,14 @@ public class DbHelper extends SQLiteOpenHelper {
             int ordered = cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_ORDERED));
             int unitTotal = price * ordered;
             total = total + unitTotal;
-            Log.i("chk", "total " + id + "->" + unitTotal);
+//            Log.i("chk", "total " + id + "->" + unitTotal);
         }
 
         return total;
     }
 
     public int clearTransaction() {
-        Log.i("chkDb", "clearTransaction ");
+//        Log.i("chkDb", "clearTransaction ");
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -464,7 +464,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // close db connection
         db.close();
-        Log.i("chk", "getAllTransactionHeader size: " + transactionHeaders.size());
+//        Log.i("chk", "getAllTransactionHeader size: " + transactionHeaders.size());
         return transactionHeaders;
     }
 
@@ -506,7 +506,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // close db connection
         db.close();
-        Log.i("chk", "getTransactionDetailByID size: " + transactionDetails.size());
+//        Log.i("chk", "getTransactionDetailByID size: " + transactionDetails.size());
         return transactionDetails;
     }
 }

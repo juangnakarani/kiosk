@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+//import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -38,12 +38,12 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, mRecyclerView, new IClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Log.i("chk", "onClick mRecyclerView");
+//                Log.i("chk", "onClick mRecyclerView");
             }
 
             @Override
             public void onLongClick(View view, int position) {
-                Log.i("chk", "onLongClick mRecyclerView");
+//                Log.i("chk", "onLongClick mRecyclerView");
             }
         }));
 
@@ -55,7 +55,7 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
         for (BluetoothDevice s : mPairedDevices){
-            Log.i("chk device",s.getName());
+//            Log.i("chk device",s.getName());
             Device d = new Device(s.getAddress(),s.getName());
             devices.add(d);
         }

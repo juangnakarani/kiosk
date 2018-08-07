@@ -11,7 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +73,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("chk", "salesFragment onCreate()");
+//        Log.i("chk", "salesFragment onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -84,7 +84,7 @@ public class SalesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("chk", "salesFragment onCreateView()");
+//        Log.i("chk", "salesFragment onCreateView()");
 
         View view = inflater.inflate(R.layout.fragment_sales, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
@@ -109,7 +109,7 @@ public class SalesFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i("chk", "onResume of AllFragment");
+//        Log.i("chk", "onResume of AllFragment");
         super.onResume();
 
         int tr_state = db.getTrasactionState();
@@ -120,26 +120,9 @@ public class SalesFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        for (Fragment fragment : getChildFragmentManager().getFragments()) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
-
-        Log.i("chk", "onActivityResult !@#$%^&*() ");
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                String result = data.getStringExtra("result");
-                Log.i("chk", "result transaction: " + result);
-            }
-        }
-    }//onActivityResult
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        Log.i("chkEvent", "salesFragment onButtonPressed()");
+//        Log.i("chkEvent", "salesFragment onButtonPressed()");
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
@@ -148,7 +131,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("chkEvent", "salesFragment onAttach()");
+//        Log.i("chkEvent", "salesFragment onAttach()");
 //        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
@@ -161,7 +144,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i("chkEvent", "salesFragment onDetach()");
+//        Log.i("chkEvent", "salesFragment onDetach()");
         mListener = null;
     }
 
