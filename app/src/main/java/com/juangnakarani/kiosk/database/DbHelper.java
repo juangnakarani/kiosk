@@ -43,7 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
             DbContract.ApplicationStateEntity.COL_KEY + " TEXT PRIMARY KEY," +
             DbContract.ApplicationStateEntity.COL_VALUE + " INTEGER)";
 
-    private static final String SQL_INSERT_TRANSACTION_RESULT_STATE = "INSERT INTO " + DbContract.ApplicationStateEntity.TABLE_NAME + "("+ DbContract.ApplicationStateEntity.COL_KEY + " , " + DbContract.ApplicationStateEntity.COL_VALUE + ") VALUES ('key_transaction_status', 0)";
+    private static final String SQL_INSERT_TRANSACTION_RESULT_STATE = "INSERT INTO " + DbContract.ApplicationStateEntity.TABLE_NAME + "(" + DbContract.ApplicationStateEntity.COL_KEY + " , " + DbContract.ApplicationStateEntity.COL_VALUE + ") VALUES ('key_transaction_status', 0)";
 
     private static final String SQL_DROP_APPLICATION_STATE = "DROP TABLE IF EXISTS " + DbContract.ApplicationStateEntity.TABLE_NAME;
 
@@ -105,7 +105,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public int getTrasactionState(){
+    public int getTrasactionState() {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(DbContract.ApplicationStateEntity.TABLE_NAME, new String[]{DbContract.ApplicationStateEntity.COL_KEY, DbContract.ApplicationStateEntity.COL_VALUE,}, DbContract.ApplicationStateEntity.COL_KEY + "=?",
@@ -117,7 +117,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return cursor.getInt(cursor.getColumnIndex(DbContract.ApplicationStateEntity.COL_VALUE));
     }
 
-    public int setTransactionState(int s){
+    public int setTransactionState(int s) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -164,6 +164,18 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public int updateProduct(Product p) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DbContract.ProductEntity.COL_NAME, p.getName());
+        values.put(DbContract.ProductEntity.COL_CATEGORY_ID, p.getCategory().getId());
+        values.put(DbContract.ProductEntity.COL_PRICE, String.valueOf(p.getPrice()));
+
+        int update = db.update(DbContract.ProductEntity.TABLE_NAME, values, DbContract.ProductEntity.COL_ID + " =?", new String[]{String.valueOf(p.getId())});
+        return update;
+    }
+
     public List<Product> getAllProducts() {
         Log.i("chkDb", "getAllProducts ProductDbHelper");
         List<Product> products = new ArrayList<>();
@@ -197,7 +209,7 @@ public class DbHelper extends SQLiteOpenHelper {
         List<Product> products = new ArrayList<>();
 
         //query select
-        String query = "SELECT * FROM " + DbContract.ProductEntity.TABLE_NAME + " WHERE " + DbContract.ProductEntity.COL_CATEGORY_ID + "="+ id + " ORDER BY " + DbContract.ProductEntity.COL_ID + " ASC";
+        String query = "SELECT * FROM " + DbContract.ProductEntity.TABLE_NAME + " WHERE " + DbContract.ProductEntity.COL_CATEGORY_ID + "=" + id + " ORDER BY " + DbContract.ProductEntity.COL_ID + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
@@ -261,7 +273,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertDefaultCategory(){
+    public void insertDefaultCategory() {
         Category food = new Category(1, "Bakso");
         this.insertCategory(food);
 
@@ -335,9 +347,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public int decrementOrder(int id) {
         int ordered;
         Product p = this.getProductByID(id);
-        if(p.getOrdered()>0){
+        if (p.getOrdered() > 0) {
             ordered = p.getOrdered() - 1;
-        }else{
+        } else {
             return 0;
         }
 
@@ -360,10 +372,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(0)}, null, null, null, null);
 
         int total = 0;
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_ID));
             int price = cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_PRICE));
-            int ordered =  cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_ORDERED));
+            int ordered = cursor.getInt(cursor.getColumnIndex(DbContract.ProductEntity.COL_ORDERED));
             int unitTotal = price * ordered;
             total = total + unitTotal;
             Log.i("chk", "total " + id + "->" + unitTotal);
@@ -379,7 +391,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(DbContract.ProductEntity.COL_ORDERED, 0);
 
-        return db.update(DbContract.ProductEntity.TABLE_NAME, values, null,null);
+        return db.update(DbContract.ProductEntity.TABLE_NAME, values, null, null);
     }
 
     public List<TransactionHeader> getAllTransactionHeader() {
@@ -423,7 +435,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public List<TransactionDetail> getTransactionDetailByID(long id){
+    public List<TransactionDetail> getTransactionDetailByID(long id) {
         List<TransactionDetail> transactionDetails = new ArrayList<>();
         //query select
         String query = "SELECT * FROM " + DbContract.TransactionDetailEntity.TABLE_NAME + " WHERE " + DbContract.TransactionDetailEntity.COL_TRANSACTION_ID + " = " + id + " ORDER BY " + DbContract.TransactionHeaderEntity.COL_ID + " DESC";
