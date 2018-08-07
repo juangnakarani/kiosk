@@ -29,7 +29,7 @@
         android:background="@android:color/transparent"
         android:gravity="top"
         android:hint="@string/edit_product_id"
-        android:inputType="textCapSentences|textMultiLine"
+        android:inputType="number"
         android:lines="1"
         android:textSize="@dimen/fontsize_text"
         android:textColorHint="@color/colorHint"></EditText>
@@ -42,7 +42,7 @@
         android:background="@android:color/transparent"
         android:gravity="top"
         android:hint="@string/edit_product_name"
-        android:inputType="textCapSentences|textMultiLine"
+        android:inputType="textCapWords"
         android:lines="1"
         android:textSize="@dimen/fontsize_text"
         android:textColorHint="@color/colorHint"></EditText>
@@ -55,7 +55,7 @@
         android:background="@android:color/transparent"
         android:gravity="top"
         android:hint="@string/edit_product_category"
-        android:inputType="textCapSentences|textMultiLine"
+        android:inputType="number"
         android:lines="1"
         android:textSize="@dimen/fontsize_text"
         android:textColorHint="@color/colorHint"></EditText>
@@ -68,7 +68,7 @@
         android:background="@android:color/transparent"
         android:gravity="top"
         android:hint="@string/edit_product_price"
-        android:inputType="textCapSentences|textMultiLine"
+        android:inputType="number"
         android:lines="1"
         android:textSize="@dimen/fontsize_text"
         android:textColorHint="@color/colorHint"></EditText>

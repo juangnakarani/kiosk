@@ -116,6 +116,7 @@ public class SalesFragment extends Fragment {
         if(tr_state==1){
             db.clearTransaction();
             int i = db.setTransactionState(0);
+
         }
     }
 

@@ -19,8 +19,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.juangnakarani.kiosk.fragment.ReportFragment;
 import com.juangnakarani.kiosk.fragment.SalesFragment;
+import com.juangnakarani.kiosk.fragment.TransactionPoolFragment;
 import com.juangnakarani.kiosk.other.CircleTransform;
 
 public class MainActivity extends AppCompatActivity
@@ -231,17 +231,11 @@ public class MainActivity extends AppCompatActivity
         switch (navItemIndex) {
 
             case 0:
-                // photos
                 SalesFragment salesFragment = new SalesFragment();
                 return salesFragment;
             case 1:
-                // notifications fragment
-                ReportFragment reportFragment = new ReportFragment();
-                return reportFragment;
-//            case 4:
-//                // settings fragment
-//                SettingsFragment settingsFragment = new SettingsFragment();
-//                return settingsFragment;
+                TransactionPoolFragment transactionPoolFragment = new TransactionPoolFragment();
+                return transactionPoolFragment;
             default:
                 return new SalesFragment();
         }

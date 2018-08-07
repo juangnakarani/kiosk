@@ -1,6 +1,5 @@
 package com.juangnakarani.kiosk;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -22,21 +21,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.juangnakarani.kiosk.adapter.TransactionAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
-import com.juangnakarani.kiosk.fragment.SalesFragment;
 import com.juangnakarani.kiosk.model.Product;
+import com.juangnakarani.kiosk.model.TransactionDetail;
+import com.juangnakarani.kiosk.model.TransactionHeader;
 import com.juangnakarani.kiosk.other.UnicodeFormatter;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,11 +92,11 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         products.addAll(db.getOrdered());
         mTrasactionAdapter.notifyDataSetChanged();
 
-        Log.i("chk", "must calculated now.....");
+//        Log.i("chk", "must calculated now.....");
         mTotal = findViewById(R.id.total_amount);
         total = db.calculateTotal();
         totalText = String.valueOf(total);
-        Log.i("chk", "total is " + total);
+//        Log.i("chk", "total is " + total);
 
         mTotal.setText("Total: " + totalText);
 
@@ -113,14 +117,14 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.i("chk","receive changed");
+//                Log.i("chk","receive changed");
                 try{
                     receivedAmount = Integer.parseInt(mReceived.getText().toString());
                 }catch (NumberFormatException ex){
                     receivedAmount = 0;
                 }
                 if(receivedAmount == total){
-                    Log.i("chk","receive receivedAmount == total");
+//                    Log.i("chk","receive receivedAmount == total");
                     mUangPas.setChecked(true);
                 }else{
                     mUangPas.setChecked(false);
@@ -138,6 +142,8 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         mPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                final String datePrint = simpleDateFormat.format(new Date());
 
                 try{
                     receivedAmount = Integer.parseInt(mReceived.getText().toString());
@@ -175,7 +181,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                     mBluetoothSocket.connect();
                     mHandler.sendEmptyMessage(0);
                 } catch (IOException e) {
-                    Log.e("chk IOException", "CouldNotConnectToSocket", e);
+//                    Log.e("chk IOException", "CouldNotConnectToSocket", e);
                     Toast.makeText(TransactionActivity.this, "Device Not Connected", Toast.LENGTH_LONG).show();
                     closeSocket(mBluetoothSocket);
                     return;
@@ -188,11 +194,12 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                     .getOutputStream();
                             String BILL = "";
 
-                            BILL = "\n" +
-                                    prefKioskName + "    \n"
+                            BILL = "\n"
+                                    + prefKioskName + "    \n"
                                     + prefKioskSlogan + " \n"
                                     + prefKioskAddress + "  \n"
-                                    + prefKioskPhone +"      \n";
+                                    + prefKioskPhone +"      \n"
+                                    + String.format("%32s", datePrint) + "\n";
                             BILL = BILL + "--------------------------------\n";
 
 
@@ -243,7 +250,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                             os.write(open);
 
                         } catch (Exception e) {
-                            Log.e("chk print", "printing ", e);
+//                            Log.e("chk print", "printing ", e);
                         }
                     }
                 };
@@ -259,8 +266,24 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 if (t.isAlive()) {
                     Log.i("chk","thread has not finished");
                 } else {
-                    Log.i("chk","thread has finished");
+//                    Log.i("chk","thread has finished");
                     db.setTransactionState(1);
+
+                    Date currentTime = Calendar.getInstance().getTime();
+                    TransactionHeader th = new TransactionHeader(currentTime.toString(), total, receivedAmount);
+                    long th_id = db.insertTransactionHeader(th);
+//                    Log.i("chk","insertTransactionHeader->" + th_id);
+                    for(Product p : products){
+//                        Log.i("chk","products->" + p.getCategory().getId());
+                        db.insertTransactionDetail(th_id, p);
+                    }
+                    List<TransactionDetail> transactionDetails = db.getTransactionDetailByID(th_id);
+                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
+                    try {
+                        t.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -270,7 +293,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        Log.i("chk", "nganu onActivityResult TransactionActivity");
+//        Log.i("chk", "nganu onActivityResult TransactionActivity");
         super.onActivityResult(requestCode,resultCode,data);
         for (android.support.v4.app.Fragment fragment : getSupportFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
@@ -309,15 +332,15 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     private void closeSocket(BluetoothSocket nOpenSocket) {
         try {
             nOpenSocket.close();
-            Log.i("chk", "SocketClosed");
+//            Log.i("chk", "SocketClosed");
         } catch (IOException ex) {
-            Log.i("chk", "CouldNotCloseSocket");
+//            Log.i("chk", "CouldNotCloseSocket");
         }
     }
 
     @Override
     public void run() {
-        Log.i("chkRun", "run form Runnable");
+//        Log.i("chkRun", "run form Runnable");
         try {
             mBluetoothSocket = mBluetoothDevice
                     .createRfcommSocketToServiceRecord(applicationUUID);
@@ -325,7 +348,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
             mBluetoothSocket.connect();
 //            mHandler.sendEmptyMessage(0);
         } catch (IOException eConnectException) {
-            Log.i("chk", "CouldNotConnectToSocket", eConnectException);
+//            Log.i("chk", "CouldNotConnectToSocket", eConnectException);
             closeSocket(mBluetoothSocket);
             return;
         }
