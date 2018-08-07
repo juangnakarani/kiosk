@@ -29,12 +29,15 @@ import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Product;
 import com.juangnakarani.kiosk.model.TransactionDetail;
 import com.juangnakarani.kiosk.model.TransactionHeader;
+import com.juangnakarani.kiosk.model.User;
 import com.juangnakarani.kiosk.other.UnicodeFormatter;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,8 +66,9 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     private UUID applicationUUID = UUID
             .fromString("00001101-0000-1000-8000-00805F9B34FB");
     private ProgressDialog mBluetoothConnectProgressDialog;
-    private String prefKioskName, prefKioskAddress, prefKioskPhone, prefKioskSlogan;
+    private String prefKioskName, prefKioskAddress, prefKioskPhone, prefKioskSlogan, prefKioskEmail, prefKioskPassword;
     private int total, receivedAmount, changeAmount;
+    private boolean isAuthenticate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,38 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         prefKioskAddress = prefs.getString("pref_key_kiosk_address","Not Found pref_key_kiosk_address");
         prefKioskPhone = prefs.getString("pref_key_kiosk_phone","Not Found pref_key_kiosk_phone");
         prefKioskSlogan = prefs.getString("pref_key_kiosk_slogan","Not Found pref_key_kiosk_slogan");
+        prefKioskEmail = prefs.getString("pref_key_email","Not Found pref_key_email");
+        prefKioskPassword = prefs.getString("pref_key_password","Not Found pref_key_password");
+
+        User user = new User("rizki.prisandi@gmail.com", "da9fdb45ec38a06c538689814f069341c95985577c5524c1fe67f991d2a8f52c");
+        Log.i("passwd" , user.getPassword());
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("err", "NoSuchAlgorithmException", e);
+        }
+        md.update(prefKioskPassword.getBytes());
+
+        byte byteData[] = md.digest();
+
+        //convert the byte to hex format method 2
+        StringBuffer hexString = new StringBuffer();
+        for (int i=0;i<byteData.length;i++) {
+            String hex=Integer.toHexString(0xff & byteData[i]);
+            if(hex.length()==1) hexString.append('0');
+            hexString.append(hex);
+        }
+
+        Log.i("passwd h" , hexString.toString());
+        Log.i("passwd u" , user.getPassword());
+        if(prefKioskEmail.equals(user.getEmail()) && hexString.toString().equals(user.getPassword())){
+            Log.i("passwd", "login success");
+            isAuthenticate = true;
+        }else{
+            Log.i("passwd", "login fail");
+            isAuthenticate = false;
+        }
 
         mRecyclerView = findViewById(R.id.rclv_transaction);
         mRecyclerView.setHasFixedSize(true);
@@ -142,6 +178,10 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         mPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!isAuthenticate){
+                    Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                 final String datePrint = simpleDateFormat.format(new Date());
 
