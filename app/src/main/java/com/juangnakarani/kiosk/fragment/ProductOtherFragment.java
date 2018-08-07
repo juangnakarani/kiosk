@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 //import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,12 @@ import android.view.ViewGroup;
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.model.ViewPagerEvent;
 import com.juangnakarani.kiosk.model.Product;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +50,7 @@ public class ProductOtherFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Product> products = new ArrayList<>();
     private DbHelper db;
+    private int transactionOrigin;
 
     public ProductOtherFragment() {
         // Required empty public constructor
@@ -104,23 +111,37 @@ public class ProductOtherFragment extends Fragment {
 
     @Override
     public void onResume() {
-//        Log.i("chk", "onResume of OtherFragment");
         super.onResume();
+//        Log.d("chk", "onResume other");
+//        Log.d("chk", "other transaction origin: " + transactionOrigin);
+        if(transactionOrigin==3){
+            products.clear();
+            products.addAll(db.getProductsByCategory(3));
+            mProductAdapter.notifyDataSetChanged();
+        }
+    }
 
-        products.clear();
-        products.addAll(db.getProductsByCategory(3));
-        mProductAdapter.notifyDataSetChanged();
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ViewPagerEvent event) {
+        transactionOrigin = event.tabPosition;
+        Log.d("chk", "onMessageEvent other : " + event.tabPosition);
+        if(event.tabPosition==3){
+            products.clear();
+            products.addAll(db.getProductsByCategory(3));
+            mProductAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // Refresh your fragment here
-//            Log.i("chkEvent", "other setUserVisibleHint()");
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-        }
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -134,13 +155,7 @@ public class ProductOtherFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        Log.i("chkEvent", "other onAttach()");
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+
     }
 
     @Override

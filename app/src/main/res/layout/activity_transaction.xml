@@ -11,7 +11,8 @@
         android:id="@+id/rclv_transaction"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"/>
 
     <TextView
         android:id="@+id/total_amount"
@@ -36,7 +37,7 @@
         android:layout_below="@id/total_amount"
         android:gravity="right"
         android:ems="10"
-        android:hint="Received"
+        android:hint="diterima"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:inputType="number" />

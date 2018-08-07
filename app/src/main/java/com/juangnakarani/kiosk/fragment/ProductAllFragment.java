@@ -15,7 +15,12 @@ import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Category;
+import com.juangnakarani.kiosk.model.ViewPagerEvent;
 import com.juangnakarani.kiosk.model.Product;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +52,7 @@ public class ProductAllFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private DbHelper db;
-
+    private int transactionOrigin;
     public ProductAllFragment() {
         // Required empty public constructor
     }
@@ -106,12 +111,39 @@ public class ProductAllFragment extends Fragment {
 
     @Override
     public void onResume() {
-//        Log.i("chk", "onResume of AllFragment");
         super.onResume();
-        products.clear();
-        products.addAll(db.getAllProducts());
-        mProductAdapter.notifyDataSetChanged();
+//        Log.d("chk", "onResume all fragment");
+//        Log.d("chk", "all product transaction origin: " + transactionOrigin);
+        if(transactionOrigin==0){
+            products.clear();
+            products.addAll(db.getAllProducts());
+            mProductAdapter.notifyDataSetChanged();
+        }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ViewPagerEvent event) {
+//        Log.d("chk", "evenbus getAllProducts(): " + event.tabPosition);
+        transactionOrigin = event.tabPosition;
+        if(event.tabPosition==0){
+            products.clear();
+            products.addAll(db.getAllProducts());
+            mProductAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -124,29 +156,7 @@ public class ProductAllFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        Log.i("chkEvent", "allProduct onAttach()");
 
-//        products.clear();
-//        products.addAll(db.getAllProducts());
-//        mProductAdapter.notifyDataSetChanged();
-
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // Refresh your fragment here
-//            Log.i("chkEvent", "allProduct setUserVisibleHint()");
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-
-        }
     }
 
     @Override

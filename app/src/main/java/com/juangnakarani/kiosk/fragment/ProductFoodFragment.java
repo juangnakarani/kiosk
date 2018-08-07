@@ -14,7 +14,12 @@ import android.view.ViewGroup;
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.model.ViewPagerEvent;
 import com.juangnakarani.kiosk.model.Product;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +49,7 @@ public class ProductFoodFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Product> products = new ArrayList<>();
     private DbHelper db;
+    private int transactionOrigin;
 
 
     public ProductFoodFragment() {
@@ -105,21 +111,37 @@ public class ProductFoodFragment extends Fragment {
 
     @Override
     public void onResume() {
-//        Log.i("chk", "onResume of FoodFragment");
         super.onResume();
-        products.clear();
-        products.addAll(db.getProductsByCategory(1));
-        mProductAdapter.notifyDataSetChanged();
+//        Log.d("chk", "onResume food");
+//        Log.d("chk", "food transaction origin: " + transactionOrigin);
+        if(transactionOrigin==1){
+            products.clear();
+            products.addAll(db.getProductsByCategory(1));
+            mProductAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ViewPagerEvent event) {
+//        Log.d("chk", "getProductsByCategory(1) : " + event.tabPosition);
+        transactionOrigin = event.tabPosition;
+        if(event.tabPosition==1){
+            products.clear();
+            products.addAll(db.getProductsByCategory(1));
+            mProductAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // Refresh your fragment here
-//            Log.i("chkEvent", "food setUserVisibleHint()");
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-        }
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -133,7 +155,7 @@ public class ProductFoodFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        Log.i("chkEvent", "food onAttach()");
+//        Log.i("chk", "food onAttach()");
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {

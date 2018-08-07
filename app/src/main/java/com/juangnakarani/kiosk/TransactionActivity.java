@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 //import android.util.Log;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,10 @@ import com.juangnakarani.kiosk.model.TransactionHeader;
 import com.juangnakarani.kiosk.model.User;
 import com.juangnakarani.kiosk.other.UnicodeFormatter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -39,8 +44,6 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,12 +72,15 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     private String prefKioskName, prefKioskAddress, prefKioskPhone, prefKioskSlogan, prefKioskEmail, prefKioskPassword;
     private int total, receivedAmount, changeAmount;
     private boolean isAuthenticate;
+    private int transactionEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        transactionEvent = 0;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         prefKioskName = prefs.getString("pref_key_kiosk_name","Not Found pref_key_kiosk_name");
@@ -243,7 +249,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                             BILL = BILL + "--------------------------------\n";
 
 
-                            BILL = BILL + String.format("%1$-4s %2$10s %3$10s", "Qty", "Price", "Total");
+                            BILL = BILL + String.format("%1$-4s %2$10s %3$14s", "Qty", "Price", "Total");
                             BILL = BILL + "\n";
                             BILL = BILL + "--------------------------------";
                             for (Product p : products) {
@@ -252,15 +258,15 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                 String price = String.valueOf(p.getPrice());
                                 BigDecimal total = p.getPrice().multiply(BigDecimal.valueOf(p.getOrdered()));
                                 BILL = BILL + "\n " + String.format("%1$-10s", "" + item);
-                                BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$10s", ordered, price, total.toString());
+                                BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$14s", ordered, price, total.toString());
                             }
                             BILL = BILL + "\n--------------------------------";
                             BILL = BILL + "\n";
-                            BILL = BILL + String.format("%1$-4s %2$10s %3$10s", "Total", "", totalText);
+                            BILL = BILL + String.format("%1$-8s %2$22s", "Total", totalText);
                             BILL = BILL + "\n";
-                            BILL = BILL + String.format("%1$-7s %2$10s %3$8s", "Dibayar", "", receivedAmount);
+                            BILL = BILL + String.format("%1$-8s %2$22s", "Diterima", receivedAmount);
                             BILL = BILL + "\n";
-                            BILL = BILL + String.format("%1$-7s %2$10s %3$8s", "kembali", "", changeAmount);
+                            BILL = BILL + String.format("%1$-8s %2$22s", "Kembali", changeAmount);
                             BILL = BILL + "\n";
                             BILL = BILL + "\n";
 //                            BILL = BILL + "        Total Value:" + "     " + "700.00" + "\n";
@@ -308,6 +314,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 } else {
 //                    Log.i("chk","thread has finished");
                     db.setTransactionState(1);
+                    transactionEvent = 1;
 
                     Date currentTime = Calendar.getInstance().getTime();
                     TransactionHeader th = new TransactionHeader(currentTime.toString(), total, receivedAmount);
@@ -364,7 +371,6 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
-
         }
         return super.onOptionsItemSelected(item);
     }

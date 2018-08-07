@@ -31,6 +31,7 @@
         android:hint="@string/edit_product_id"
         android:inputType="number"
         android:lines="1"
+        android:textColor="@color/title"
         android:textSize="@dimen/fontsize_text"
         android:textColorHint="@color/colorHint"></EditText>
     <EditText
@@ -45,6 +46,7 @@
         android:inputType="textCapWords"
         android:lines="1"
         android:textSize="@dimen/fontsize_text"
+        android:textColor="@color/title"
         android:textColorHint="@color/colorHint"></EditText>
     <EditText
         android:id="@+id/dialog_product_edit_category"
@@ -58,6 +60,7 @@
         android:inputType="number"
         android:lines="1"
         android:textSize="@dimen/fontsize_text"
+        android:textColor="@color/title"
         android:textColorHint="@color/colorHint"></EditText>
     <EditText
         android:id="@+id/dialog_product_edit_price"
@@ -70,6 +73,7 @@
         android:hint="@string/edit_product_price"
         android:inputType="number"
         android:lines="1"
+        android:textColor="@color/title"
         android:textSize="@dimen/fontsize_text"
         android:textColorHint="@color/colorHint"></EditText>
 </LinearLayout>

@@ -182,7 +182,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         //query select
         String query = "SELECT * FROM " + DbContract.ProductEntity.TABLE_NAME + " ORDER BY " + DbContract.ProductEntity.COL_ID + " ASC";
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         // looping through all rows and adding to list
@@ -210,7 +210,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         //query select
         String query = "SELECT * FROM " + DbContract.ProductEntity.TABLE_NAME + " WHERE " + DbContract.ProductEntity.COL_CATEGORY_ID + "=" + id + " ORDER BY " + DbContract.ProductEntity.COL_ID + " ASC";
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         // looping through all rows and adding to list
@@ -301,7 +301,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Product tahu = new Product(106, "Tahu", BigDecimal.valueOf(2000), 0, this.getCategoryByID(1));
         this.insertProduct(tahu);
 
-        Product pangsitGoreng = new Product(107, "Tahu", BigDecimal.valueOf(2000), 0, this.getCategoryByID(1));
+        Product pangsitGoreng = new Product(107, "Pangsit Goreng", BigDecimal.valueOf(2000), 0, this.getCategoryByID(1));
         this.insertProduct(pangsitGoreng);
 
         // beverage
@@ -361,17 +361,19 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(DbContract.CategoryEntity.TABLE_NAME, new String[]{DbContract.CategoryEntity.COL_ID, DbContract.CategoryEntity.COL_DESCRIPTION},
-                DbContract.ProductEntity.COL_ID + "=?",
+                DbContract.ProductEntity.COL_ID + " =?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
         if (cursor != null)
             cursor.moveToFirst();
+
 
         //instance new product
         Category c = new Category(
                 cursor.getInt(cursor.getColumnIndex(DbContract.CategoryEntity.COL_ID)),
                 cursor.getString(cursor.getColumnIndex(DbContract.CategoryEntity.COL_DESCRIPTION)));
 
+        db.close();
         return c;
     }
 

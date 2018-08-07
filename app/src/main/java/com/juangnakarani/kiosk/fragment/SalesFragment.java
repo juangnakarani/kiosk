@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +18,9 @@ import android.view.ViewGroup;
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.TransactionActivity;
 import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.model.ViewPagerEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class SalesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private DbHelper db;
+    private int trOrigin;
 
     public SalesFragment() {
         // Required empty public constructor
@@ -89,6 +92,25 @@ public class SalesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sales, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+//                Log.i("chk", "check tab position->" + position);
+                trOrigin = position;
+                EventBus.getDefault().post(new ViewPagerEvent(position));
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -99,6 +121,7 @@ public class SalesFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), TransactionActivity.class);
                 startActivity(intent);
+
 
             }
         });
@@ -113,7 +136,7 @@ public class SalesFragment extends Fragment {
         super.onResume();
 
         int tr_state = db.getTrasactionState();
-        if(tr_state==1){
+        if (tr_state == 1) {
             db.clearTransaction();
             int i = db.setTransactionState(0);
 
@@ -131,14 +154,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        Log.i("chkEvent", "salesFragment onAttach()");
-//        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+
     }
 
     @Override
