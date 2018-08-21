@@ -43,6 +43,8 @@
             android:defaultValue="5"
             android:key="@string/pref_key_default_data"
             android:title="@string/pref_title_default_data" />
+        <com.juangnakarani.kiosk.preference.DialogBackupPreference android:key="pref_dialog_backup"
+            android:title="Backup"></com.juangnakarani.kiosk.preference.DialogBackupPreference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_device">
         <Preference
