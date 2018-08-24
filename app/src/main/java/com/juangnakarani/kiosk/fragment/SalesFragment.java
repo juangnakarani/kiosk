@@ -9,8 +9,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 //import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +78,7 @@ public class SalesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Log.i("chk", "salesFragment onCreate()");
+        Log.i("chk", "salesFragment onCreate()");
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -87,10 +89,11 @@ public class SalesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Log.i("chk", "salesFragment onCreateView()");
+        Log.i("chk", "salesFragment onCreateView()");
 
         View view = inflater.inflate(R.layout.fragment_sales, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        viewPager.setOffscreenPageLimit(0);
         setupViewPager(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -100,7 +103,7 @@ public class SalesFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-//                Log.i("chk", "check tab position->" + position);
+                Log.e("chk", "check tab position->" + position);
                 trOrigin = position;
                 EventBus.getDefault().post(new ViewPagerEvent(position));
 
@@ -132,7 +135,7 @@ public class SalesFragment extends Fragment {
 
     @Override
     public void onResume() {
-//        Log.i("chk", "onResume of AllFragment");
+        Log.i("chk", "onResume of Sales Fragment");
         super.onResume();
 
         int tr_state = db.getTrasactionState();
@@ -188,7 +191,7 @@ public class SalesFragment extends Fragment {
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

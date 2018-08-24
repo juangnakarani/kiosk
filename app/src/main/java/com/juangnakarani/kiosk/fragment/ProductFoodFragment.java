@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 //import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,7 @@ public class ProductFoodFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d("chk", "onResume food");
+        Log.d("chk", "onResume food");
 //        Log.d("chk", "food transaction origin: " + transactionOrigin);
         if(transactionOrigin==1){
             products.clear();
@@ -123,7 +124,7 @@ public class ProductFoodFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ViewPagerEvent event) {
-//        Log.d("chk", "getProductsByCategory(1) : " + event.tabPosition);
+        Log.d("chk", "getProductsByCategory(1) : " + event.tabPosition);
         transactionOrigin = event.tabPosition;
         if(event.tabPosition==1){
             products.clear();

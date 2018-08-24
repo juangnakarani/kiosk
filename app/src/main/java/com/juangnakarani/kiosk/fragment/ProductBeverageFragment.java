@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 //import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,18 +112,18 @@ public class ProductBeverageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d("chk", "onResume minum");
+        Log.d("chk", "onResume minum");
 //        Log.d("chk", "beverage transaction origin: " + transactionOrigin);
-        if (transactionOrigin == 2) {
-            products.clear();
-            products.addAll(db.getProductsByCategory(2));
-            mProductAdapter.notifyDataSetChanged();
-        }
+//        if (transactionOrigin == 2) {
+//            products.clear();
+//            products.addAll(db.getProductsByCategory(2));
+//            mProductAdapter.notifyDataSetChanged();
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ViewPagerEvent event) {
-//        Log.d("chk", "eventbus getProductsByCategory(2) : " + event.tabPosition);
+        Log.d("chk", "eventbus getProductsByCategory(2) : " + event.tabPosition);
         transactionOrigin = event.tabPosition;
         if (event.tabPosition == 2) {
             products.clear();

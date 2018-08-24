@@ -112,13 +112,13 @@ public class ProductOtherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d("chk", "onResume other");
+        Log.d("chk", "onResume other");
 //        Log.d("chk", "other transaction origin: " + transactionOrigin);
-        if(transactionOrigin==3){
-            products.clear();
-            products.addAll(db.getProductsByCategory(3));
-            mProductAdapter.notifyDataSetChanged();
-        }
+//        if(transactionOrigin==3){
+//            products.clear();
+//            products.addAll(db.getProductsByCategory(3));
+//            mProductAdapter.notifyDataSetChanged();
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

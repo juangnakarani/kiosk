@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 //import android.util.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class ProductAllFragment extends Fragment {
 
     private DbHelper db;
     private int transactionOrigin;
+
     public ProductAllFragment() {
         // Required empty public constructor
     }
@@ -87,7 +89,7 @@ public class ProductAllFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Log.i("chkEvent", "allProduct onCreateView()");
+        Log.d("chk", "allProduct onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
@@ -112,20 +114,20 @@ public class ProductAllFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d("chk", "onResume all fragment");
+        Log.d("chk", "onResume all fragment");
 //        Log.d("chk", "all product transaction origin: " + transactionOrigin);
-        if(transactionOrigin==0){
-            products.clear();
-            products.addAll(db.getAllProducts());
-            mProductAdapter.notifyDataSetChanged();
-        }
+//        if(transactionOrigin==0){
+//            products.clear();
+//            products.addAll(db.getAllProducts());
+//            mProductAdapter.notifyDataSetChanged();
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ViewPagerEvent event) {
-//        Log.d("chk", "evenbus getAllProducts(): " + event.tabPosition);
+        Log.d("chk", "evenbus getAllProducts(): " + event.tabPosition);
         transactionOrigin = event.tabPosition;
-        if(event.tabPosition==0){
+        if (event.tabPosition == 0) {
             products.clear();
             products.addAll(db.getAllProducts());
             mProductAdapter.notifyDataSetChanged();
@@ -135,6 +137,7 @@ public class ProductAllFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.e("chk", "onStart Product All Fragment");
         EventBus.getDefault().register(this);
     }
 
@@ -144,40 +147,58 @@ public class ProductAllFragment extends Fragment {
         super.onStop();
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-//        Log.i("chkEvent", "allProduct onButtonPressed()");
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // Do your Work
+            Log.e("chk", "setUserVisibleHint->" + isVisibleToUser);
+            Log.e("chk", "setUserVisibleHint->" + products.size());
+            Log.e("chk", "setUserVisibleHint transactionOrigin->" + transactionOrigin);
         }
     }
+//    @Override
+//    public void onHiddenChanged(boolean hidden) {
+//        super.onHiddenChanged(hidden);
+//        if (!hidden) {
+//            Log.e("chk","onHiddenChanged->" + hidden);
+//        }
+//    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
 
-    }
+        // TODO: Rename method, update argument and hook method into UI event
+        public void onButtonPressed (Uri uri){
+//        Log.i("chkEvent", "allProduct onButtonPressed()");
+            if (mListener != null) {
+                mListener.onFragmentInteraction(uri);
+            }
+        }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        @Override
+        public void onAttach (Context context){
+            super.onAttach(context);
+
+        }
+
+        @Override
+        public void onDetach () {
+            super.onDetach();
 //        Log.i("chkEvent", "allProduct onDetach()");
-        mListener = null;
-    }
+            mListener = null;
+        }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        /**
+         * This interface must be implemented by activities that contain this
+         * fragment to allow an interaction in this fragment to be communicated
+         * to the activity and potentially other fragments contained in that
+         * activity.
+         * <p>
+         * See the Android Training lesson <a href=
+         * "http://developer.android.com/training/basics/fragments/communicating.html"
+         * >Communicating with Other Fragments</a> for more information.
+         */
+        public interface OnFragmentInteractionListener {
+            // TODO: Update argument type and name
+            void onFragmentInteraction(Uri uri);
+        }
     }
-}
