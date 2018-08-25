@@ -30,7 +30,7 @@
         android:textAppearance="@android:style/TextAppearance"
         android:visibility="visible" />
 
-    <EditText
+    <com.juangnakarani.kiosk.component.CurrencyEditText
         android:id="@+id/amount_received"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

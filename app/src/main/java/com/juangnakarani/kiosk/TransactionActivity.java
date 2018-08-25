@@ -50,6 +50,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.juangnakarani.kiosk.other.RupiahFormat.formatRupiah;
+
 public class TransactionActivity extends AppCompatActivity implements Runnable {
     private static final int TRANSACTION_OK = 1;
     private static final int TRANSACTION_CANCEL = 0;
@@ -137,7 +139,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 //        Log.i("chk", "must calculated now.....");
         mTotal = findViewById(R.id.total_amount);
         total = db.calculateTotal();
-        totalText = String.valueOf(total);
+        totalText = formatRupiah(total);
 //        Log.i("chk", "total is " + total);
 
         mTotal.setText("Total: " + totalText);

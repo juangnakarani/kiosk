@@ -10,9 +10,16 @@ import android.widget.TextView;
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Product;
+import com.juangnakarani.kiosk.other.RupiahFormat;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
+
+import static com.juangnakarani.kiosk.other.RupiahFormat.formatRupiah;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHoler> {
     private List<Product> products;
@@ -33,14 +40,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TransactionViewHoler holder, int position) {
+
         Product product = products.get(position);
         holder.id = product.getId();
         holder.name.setText(product.getName());
         String priceMultiplyOrder = product.getOrdered() + " x " + product.getPrice().toString();
+
         holder.price.setText(priceMultiplyOrder);
 //        holder.ordered.setText(String.valueOf(product.getOrdered()));
         BigDecimal total = product.getPrice().multiply(BigDecimal.valueOf(product.getOrdered()));
-        holder.total.setText(total.toString());
+        holder.total.setText(formatRupiah(total));
     }
 
     @Override
