@@ -2,6 +2,7 @@ package com.juangnakarani.kiosk.fragment;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
@@ -44,7 +46,7 @@ public class ProductFoodFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
+    private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mProductAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -91,6 +93,8 @@ public class ProductFoodFragment extends Fragment {
 //        Log.i("chkEvent", "food onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
+        mProgressBar = view.findViewById(R.id.loadingBarProduct);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
         mRecyclerView.setHasFixedSize(false);
@@ -100,12 +104,7 @@ public class ProductFoodFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mProductAdapter);
 
-        products.clear();
         db = new DbHelper(getContext());
-        // Gets the data repository in write mode
-        products.addAll(db.getProductsByCategory(1));
-
-        mProductAdapter.notifyDataSetChanged();
 
         return view;
     }
@@ -115,11 +114,11 @@ public class ProductFoodFragment extends Fragment {
         super.onResume();
         Log.d("chk", "onResume food");
 //        Log.d("chk", "food transaction origin: " + transactionOrigin);
-        if(transactionOrigin==1){
-            products.clear();
-            products.addAll(db.getProductsByCategory(1));
-            mProductAdapter.notifyDataSetChanged();
-        }
+//        if(transactionOrigin==1){
+//            products.clear();
+//            products.addAll(db.getProductsByCategory(1));
+//            mProductAdapter.notifyDataSetChanged();
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -128,8 +127,11 @@ public class ProductFoodFragment extends Fragment {
         transactionOrigin = event.tabPosition;
         if(event.tabPosition==1){
             products.clear();
-            products.addAll(db.getProductsByCategory(1));
             mProductAdapter.notifyDataSetChanged();
+            new AsyncGetProductOperation().execute();
+//            products.clear();
+//            products.addAll(db.getProductsByCategory(1));
+//            mProductAdapter.notifyDataSetChanged();
         }
     }
 
@@ -156,13 +158,6 @@ public class ProductFoodFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        Log.i("chk", "food onAttach()");
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -185,5 +180,26 @@ public class ProductFoodFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class AsyncGetProductOperation extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            products.addAll(db.getProductsByCategory(1));
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result){
+            if(result==Boolean.TRUE){
+                Log.d("chk","onPostExecute food return true");
+                mProductAdapter.notifyDataSetChanged();
+                mProgressBar.setVisibility(View.INVISIBLE);
+            }
+
+        }
     }
 }

@@ -7,11 +7,15 @@
         <item
             android:id="@+id/nav_sales"
             android:icon="@drawable/ic_money"
-            android:title="Sale" />
+            android:title="Jualan" />
         <item
             android:id="@+id/nav_report"
             android:icon="@drawable/ic_bar_chart"
-            android:title="Transaction Pool" />
+            android:title="Transactions" />
+        <item
+            android:id="@+id/nav_analysis"
+            android:icon="@drawable/ic_bar_chart"
+            android:title="Analysis" />
     </group>
 
     <!--<item android:title="Communicate">-->

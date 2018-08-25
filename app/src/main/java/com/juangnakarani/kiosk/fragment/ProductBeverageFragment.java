@@ -2,6 +2,7 @@ package com.juangnakarani.kiosk.fragment;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
@@ -44,7 +46,7 @@ public class ProductBeverageFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
+    private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mProductAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -90,6 +92,8 @@ public class ProductBeverageFragment extends Fragment {
 //        Log.i("chkEvent", "beverage onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
+        mProgressBar = view.findViewById(R.id.loadingBarProduct);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
         mRecyclerView.setHasFixedSize(false);
@@ -99,12 +103,7 @@ public class ProductBeverageFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mProductAdapter);
 
-        products.clear();
         db = new DbHelper(getContext());
-        // Gets the data repository in write mode
-        products.addAll(db.getProductsByCategory(2));
-
-        mProductAdapter.notifyDataSetChanged();
 
         return view;
     }
@@ -113,12 +112,6 @@ public class ProductBeverageFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("chk", "onResume minum");
-//        Log.d("chk", "beverage transaction origin: " + transactionOrigin);
-//        if (transactionOrigin == 2) {
-//            products.clear();
-//            products.addAll(db.getProductsByCategory(2));
-//            mProductAdapter.notifyDataSetChanged();
-//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -127,8 +120,8 @@ public class ProductBeverageFragment extends Fragment {
         transactionOrigin = event.tabPosition;
         if (event.tabPosition == 2) {
             products.clear();
-            products.addAll(db.getProductsByCategory(2));
             mProductAdapter.notifyDataSetChanged();
+            new AsyncGetProductOperation().execute();
         }
     }
 
@@ -177,5 +170,26 @@ public class ProductBeverageFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class AsyncGetProductOperation extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            products.addAll(db.getProductsByCategory(2));
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result){
+            if(result==Boolean.TRUE){
+                Log.d("chk","onPostExecute beverage return true");
+                mProductAdapter.notifyDataSetChanged();
+                mProgressBar.setVisibility(View.INVISIBLE);
+            }
+
+        }
     }
 }

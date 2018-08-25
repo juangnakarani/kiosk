@@ -43,6 +43,8 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -145,6 +147,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         mTotal.setText("Total: " + totalText);
 
         mReceived = findViewById(R.id.amount_received);
+        mReceived.requestFocus();
         mUangPas =  findViewById(R.id.check_uang_pas);
         mUangPas.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,8 +166,11 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 //                Log.i("chk","receive changed");
                 try{
-                    receivedAmount = Integer.parseInt(mReceived.getText().toString());
-                }catch (NumberFormatException ex){
+                    Log.d("chk","receive->" + mReceived.getText().toString().replace(",", ""));
+
+                    receivedAmount = Integer.parseInt(mReceived.getText().toString().replace(",", ""));
+                }catch (NumberFormatException ex) {
+                    Log.e("chk", ex.toString());
                     receivedAmount = 0;
                 }
                 if(receivedAmount == total){
@@ -193,11 +199,11 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                 final String datePrint = simpleDateFormat.format(new Date());
 
-                try{
-                    receivedAmount = Integer.parseInt(mReceived.getText().toString());
-                }catch (NumberFormatException ex){
-                    receivedAmount = 0;
-                }
+//                try{
+//                    receivedAmount = Integer.parseInt(mReceived.getText().toString());
+//                }catch (NumberFormatException ex){
+//                    receivedAmount = 0;
+//                }
 
                 if(receivedAmount==0){
                     Toast.makeText(view.getContext(), "Isikan jumlah dibayar!", Toast.LENGTH_SHORT).show();
@@ -214,6 +220,17 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 
                 Snackbar.make(view, "Uang kembalian: " + changeAmount, Snackbar.LENGTH_INDEFINITE)
                         .setAction("Action", null).show();
+                //TODO move code bellow to function
+                Date currentTime = Calendar.getInstance().getTime();
+                TransactionHeader th = new TransactionHeader(currentTime.toString(), total, receivedAmount);
+                long th_id = db.insertTransactionHeader(th);
+//                    Log.i("chk","insertTransactionHeader->" + th_id);
+                for(Product p : products){
+//                        Log.i("chk","products->" + p.getCategory().getId());
+                    db.insertTransactionDetail(th_id, p);
+                }
+                List<TransactionDetail> transactionDetails = db.getTransactionDetailByID(th_id);
+//                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
 
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 mBluetoothDevice = mBluetoothAdapter.getRemoteDevice("DC:0D:30:2B:3E:04");
@@ -318,16 +335,6 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                     db.setTransactionState(1);
                     transactionEvent = 1;
 
-                    Date currentTime = Calendar.getInstance().getTime();
-                    TransactionHeader th = new TransactionHeader(currentTime.toString(), total, receivedAmount);
-                    long th_id = db.insertTransactionHeader(th);
-//                    Log.i("chk","insertTransactionHeader->" + th_id);
-                    for(Product p : products){
-//                        Log.i("chk","products->" + p.getCategory().getId());
-                        db.insertTransactionDetail(th_id, p);
-                    }
-                    List<TransactionDetail> transactionDetails = db.getTransactionDetailByID(th_id);
-//                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
                     try {
                         t.join();
                     } catch (InterruptedException e) {

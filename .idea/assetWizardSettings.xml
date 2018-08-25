@@ -45,8 +45,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_clear" />
-                            <entry key="sourceFile" value="C:\Users\redgopher\Pictures\baseline-clear-24px.svg" />
+                            <entry key="outputName" value="ic_outline_shopping" />
+                            <entry key="sourceFile" value="C:\Users\redgopher\Pictures\outline-shopping_basket-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

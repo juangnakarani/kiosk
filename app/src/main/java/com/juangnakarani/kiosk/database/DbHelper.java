@@ -101,7 +101,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(DbContract.TransactionHeaderEntity.COL_RECEIVED, th.getReceived());
 
         long id = db.insert(DbContract.TransactionHeaderEntity.TABLE_NAME, null, values);
-        db.close();
+        //db.close();
         return id;
     }
 
@@ -199,7 +199,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         // close db connection
-        db.close();
+//        db.close();
 
         return products;
     }
@@ -227,7 +227,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         // close db connection
-        db.close();
+//        db.close();
 
         return products;
     }
@@ -255,7 +255,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         // close db connection
-        db.close();
+//        db.close();
 
         return products;
     }
@@ -273,7 +273,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void installDefaultData(){
+    public void installDefaultData() {
         Category food = new Category(1, "Bakso");
         this.insertCategory(food);
 
@@ -351,7 +351,7 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         // close db connection
-        db.close();
+//        db.close();
 //        Log.i("chk categories", String.valueOf(categories.get(0).getDescription()));
         return categories;
 
@@ -373,7 +373,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 cursor.getInt(cursor.getColumnIndex(DbContract.CategoryEntity.COL_ID)),
                 cursor.getString(cursor.getColumnIndex(DbContract.CategoryEntity.COL_DESCRIPTION)));
 
-        db.close();
+//        db.close();
         return c;
     }
 
@@ -465,8 +465,8 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         // close db connection
-        db.close();
-//        Log.i("chk", "getAllTransactionHeader size: " + transactionHeaders.size());
+        // db.close();
+        // Log.i("chk", "getAllTransactionHeader size: " + transactionHeaders.size());
         return transactionHeaders;
     }
 
@@ -507,8 +507,8 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         // close db connection
-        db.close();
-//        Log.i("chk", "getTransactionDetailByID size: " + transactionDetails.size());
+        // db.close();
+        // Log.i("chk", "getTransactionDetailByID size: " + transactionDetails.size());
         return transactionDetails;
     }
 }

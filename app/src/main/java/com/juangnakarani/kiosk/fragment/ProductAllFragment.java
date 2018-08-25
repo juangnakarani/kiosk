@@ -2,6 +2,7 @@ package com.juangnakarani.kiosk.fragment;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
@@ -48,6 +50,7 @@ public class ProductAllFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mProductAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar mProgressBar;
     private List<Product> products = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
@@ -92,7 +95,8 @@ public class ProductAllFragment extends Fragment {
         Log.d("chk", "allProduct onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
-
+        mProgressBar = view.findViewById(R.id.loadingBarProduct);
+        mProgressBar.setVisibility(View.VISIBLE);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
         mRecyclerView.setHasFixedSize(false);
 
@@ -100,14 +104,12 @@ public class ProductAllFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(view.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mProductAdapter);
-
-        products.clear();
-
         db = new DbHelper(getContext());
-        // Gets the data repository in write mode
-        products.addAll(db.getAllProducts());
 
-        mProductAdapter.notifyDataSetChanged();
+        if(products.size()==0){
+            new AsyncGetProductOperation().execute();
+        }
+
         return view;
     }
 
@@ -115,56 +117,33 @@ public class ProductAllFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("chk", "onResume all fragment");
-//        Log.d("chk", "all product transaction origin: " + transactionOrigin);
-//        if(transactionOrigin==0){
-//            products.clear();
-//            products.addAll(db.getAllProducts());
-//            mProductAdapter.notifyDataSetChanged();
-//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ViewPagerEvent event) {
         Log.d("chk", "evenbus getAllProducts(): " + event.tabPosition);
         transactionOrigin = event.tabPosition;
+
         if (event.tabPosition == 0) {
             products.clear();
-            products.addAll(db.getAllProducts());
             mProductAdapter.notifyDataSetChanged();
+            new AsyncGetProductOperation().execute();
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.e("chk", "onStart Product All Fragment");
+        Log.d("chk", "onStart Product All Fragment");
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
+        Log.d("chk", "onStop Product All Fragment");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            // Do your Work
-            Log.e("chk", "setUserVisibleHint->" + isVisibleToUser);
-            Log.e("chk", "setUserVisibleHint->" + products.size());
-            Log.e("chk", "setUserVisibleHint transactionOrigin->" + transactionOrigin);
-        }
-    }
-//    @Override
-//    public void onHiddenChanged(boolean hidden) {
-//        super.onHiddenChanged(hidden);
-//        if (!hidden) {
-//            Log.e("chk","onHiddenChanged->" + hidden);
-//        }
-//    }
-
 
         // TODO: Rename method, update argument and hook method into UI event
         public void onButtonPressed (Uri uri){
@@ -200,5 +179,27 @@ public class ProductAllFragment extends Fragment {
         public interface OnFragmentInteractionListener {
             // TODO: Update argument type and name
             void onFragmentInteraction(Uri uri);
+        }
+
+        private class AsyncGetProductOperation extends AsyncTask<Void, Void, Boolean>{
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                // Gets the data repository in write mode
+
+                products.addAll(db.getAllProducts());
+
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result){
+                if(result==Boolean.TRUE){
+                    Log.d("chk","onPostExecute all product return true");
+                    mProductAdapter.notifyDataSetChanged();
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                }
+
+            }
         }
     }

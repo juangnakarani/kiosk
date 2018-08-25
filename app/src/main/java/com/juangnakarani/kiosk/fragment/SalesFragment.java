@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.support.v4.view.ViewPager;
 //import android.util.Log;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -48,6 +51,7 @@ public class SalesFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private BottomNavigationView bottomNavigationView;
 
     private OnFragmentInteractionListener mListener;
     private DbHelper db;
@@ -118,18 +122,30 @@ public class SalesFragment extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        bottomNavigationView = view.findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), TransactionActivity.class);
-                startActivity(intent);
-
-
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_sales:
+                        Intent intent = new Intent(getContext(), TransactionActivity.class);
+                        startActivity(intent);
+                }
+                return false;
             }
         });
-//        viewPager.getAdapter().notifyDataSetChanged();
-        // Inflate the layout for this fragment
+
+//        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(view.getContext(), TransactionActivity.class);
+//                startActivity(intent);
+//
+//
+//            }
+//        });
+
         return view;
     }
 

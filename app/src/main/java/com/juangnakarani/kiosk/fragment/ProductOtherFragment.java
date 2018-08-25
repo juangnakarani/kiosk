@@ -2,6 +2,7 @@ package com.juangnakarani.kiosk.fragment;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
@@ -44,7 +46,7 @@ public class ProductOtherFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
+    private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mProductAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -87,9 +89,11 @@ public class ProductOtherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Log.i("chkEvent", "other onCreateView()");
+        Log.d("chk", "other onCreateView()");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_product, container, false);
+        mProgressBar = view.findViewById(R.id.loadingBarProduct);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rclv_product_all);
         mRecyclerView.setHasFixedSize(false);
@@ -99,12 +103,7 @@ public class ProductOtherFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mProductAdapter);
 
-        products.clear();
         db = new DbHelper(getContext());
-        // Gets the data repository in write mode
-        products.addAll(db.getProductsByCategory(3));
-
-        mProductAdapter.notifyDataSetChanged();
 
         return view;
     }
@@ -113,12 +112,6 @@ public class ProductOtherFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("chk", "onResume other");
-//        Log.d("chk", "other transaction origin: " + transactionOrigin);
-//        if(transactionOrigin==3){
-//            products.clear();
-//            products.addAll(db.getProductsByCategory(3));
-//            mProductAdapter.notifyDataSetChanged();
-//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -127,8 +120,8 @@ public class ProductOtherFragment extends Fragment {
         Log.d("chk", "onMessageEvent other : " + event.tabPosition);
         if(event.tabPosition==3){
             products.clear();
-            products.addAll(db.getProductsByCategory(3));
             mProductAdapter.notifyDataSetChanged();
+            new AsyncGetProductOperation().execute();
         }
     }
 
@@ -178,5 +171,27 @@ public class ProductOtherFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class AsyncGetProductOperation extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            products.addAll(db.getProductsByCategory(3));
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result){
+            if(result==Boolean.TRUE){
+                Log.d("chk","onPostExecute other return true");
+
+                mProductAdapter.notifyDataSetChanged();
+                mProgressBar.setVisibility(View.INVISIBLE);
+            }
+
+        }
     }
 }
