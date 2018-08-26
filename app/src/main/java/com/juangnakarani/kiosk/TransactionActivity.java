@@ -235,7 +235,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 String defaultValue = getResources().getString(R.string.pref_key_printer);
                 String printerValue = sharedPref.getString(getString(R.string.pref_key_printer), defaultValue);
-                
+
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 mBluetoothDevice = mBluetoothAdapter.getRemoteDevice(printerValue);
 

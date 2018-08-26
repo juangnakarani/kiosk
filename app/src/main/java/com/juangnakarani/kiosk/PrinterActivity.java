@@ -29,6 +29,7 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
     private RecyclerView.Adapter mPairedDevicesAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<Device> devices = new ArrayList<>();
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
         setContentView(R.layout.activity_printer);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
         mRecyclerView = (RecyclerView) findViewById(R.id.rclv_devices);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, mRecyclerView, new IClickListener() {
@@ -48,8 +50,13 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
             @Override
             public void onLongClick(View view, int position) {
                 Log.d("chk", "onLongClick mRecyclerView");
+                for(Device d: devices){
+                    d.setSelected(false);
+                }
                 Device d = devices.get(position);
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                d.setSelected(true);
+                mPairedDevicesAdapter.notifyDataSetChanged();
+//                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString(getString(R.string.pref_key_printer), d.getAddress());
                 editor.commit();
@@ -57,7 +64,7 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
                 String defaultValue = getResources().getString(R.string.pref_key_printer);
                 String printerValue = sharedPref.getString(getString(R.string.pref_key_printer), defaultValue);
 
-                Toast.makeText(PrinterActivity.this, "Selected printer: " +d.getName()+ " (" + printerValue + ")", Toast.LENGTH_LONG).show();
+                Toast.makeText(PrinterActivity.this, "Selected printer: " +d.getName()+ " (" + printerValue + ")", Toast.LENGTH_SHORT).show();
             }
         }));
 
@@ -68,9 +75,16 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        String defaultValue = getResources().getString(R.string.pref_key_printer);
+        String printerValue = sharedPref.getString(getString(R.string.pref_key_printer), defaultValue);
+
         for (BluetoothDevice s : mPairedDevices){
 //            Log.i("chk device",s.getName());
-            Device d = new Device(s.getAddress(),s.getName());
+            Device d = new Device(s.getAddress(),s.getName(),false);
+            if(s.getAddress().equals(printerValue)){
+                d.setSelected(true);
+            }
             devices.add(d);
         }
 

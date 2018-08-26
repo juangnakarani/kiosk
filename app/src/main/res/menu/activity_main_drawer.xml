@@ -6,11 +6,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_sales"
-            android:icon="@drawable/ic_money"
+            android:icon="@drawable/ic_round_store"
             android:title="Jualan" />
         <item
             android:id="@+id/nav_report"
-            android:icon="@drawable/ic_bar_chart"
+            android:icon="@drawable/ic_money"
             android:title="Transactions" />
         <item
             android:id="@+id/nav_analysis"
