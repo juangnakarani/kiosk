@@ -61,6 +61,6 @@
             android:layout_height="56dp"
             android:layout_alignParentRight="true"
             android:background="?android:attr/selectableItemBackground"
-            app:srcCompat="@drawable/ic_clear" />
+            app:srcCompat="@drawable/ic_outline_backspace" />
     </RelativeLayout>
 </RelativeLayout>

@@ -1,14 +1,18 @@
 package com.juangnakarani.kiosk;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     private static final String urlProfileImg = "https://lh3.googleusercontent.com/eCtE_G34M9ygdkmOpYvCag1vBARCmZwnVS6rS5t4JLzJ6QgQSBquM0nuTsCpLhYbKljoyS-txg";
     private NavigationView navigationView;
     private View navHeader;
+    private SharedPreferences sharedPref;
 
 
     @Override
@@ -59,6 +64,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String kioskName = sharedPref.getString(getString(R.string.pref_key_kiosk_name), "Not found Kiosk name");
+        this.setTitle(kioskName);
 
         mHandler = new Handler();
 
@@ -104,6 +113,15 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(MainActivity.this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // put your code here...
+        String kioskName = sharedPref.getString(getString(R.string.pref_key_kiosk_name), "Not found Kiosk name");
+        this.setTitle(kioskName);
 
     }
 

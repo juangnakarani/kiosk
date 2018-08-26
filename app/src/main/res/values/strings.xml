@@ -12,7 +12,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="pref_header_business">Business</string>
+    <string name="pref_header_properties">Properties</string>
 
     <string name="pref_key_product">pref_key_product</string>
     <string name="pref_title_product">Product</string>
@@ -22,6 +22,11 @@
 
     <string name="pref_key_transaction_pooling">pref_key_transaction_pooling</string>
     <string name="pref_title_transaction_pooling">Transaction Pooling</string>
+
+    <string name="pref_key_logout">pref_key_logout</string>
+    <string name="pref_title_logout">Logout</string>
+
+    <string name="pref_header_data">Data</string>
 
     <string name="pref_key_default_data">pref_key_default_data</string>
     <string name="pref_title_default_data">Install Default Data</string>
@@ -42,9 +47,12 @@
     <string name="pref_title_kiosk_slogan">Slogan</string>
     <string name="pref_default_kiosk_slogan">Pionirnya Bakso Solo &amp; Bakar di Kediri</string>
 
-    <string name="pref_header_device">Device</string>
+    <string name="pref_header_printer">Printer</string>
     <string name="pref_key_printer">pref_key_printer</string>
-    <string name="pref_title_printer">Printer</string>
+    <string name="pref_title_printer">Paired Device</string>
+
+    <string name="pref_key_print_copy_nota">pref_key_print_copy_nota</string>
+    <string name="pref_title_print_copy_nota">Print Copy Nota</string>
 
     <string name="pref_header_server">Server</string>
 

@@ -7,11 +7,15 @@
         <item
             android:id="@+id/nav_sales"
             android:icon="@drawable/ic_round_store"
-            android:title="Jualan" />
+            android:title="Kiosk" />
         <item
-            android:id="@+id/nav_report"
+            android:id="@+id/nav_transaction"
             android:icon="@drawable/ic_money"
             android:title="Transactions" />
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_outline_payment_24px"
+            android:title="Report" />
         <item
             android:id="@+id/nav_analysis"
             android:icon="@drawable/ic_bar_chart"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/pref_header_business">
+    <PreferenceCategory android:title="@string/pref_header_properties">
         <Preference
             android:defaultValue="123"
             android:key="@string/pref_key_product"
@@ -39,14 +39,21 @@
             android:key="@string/pref_key_kiosk_slogan"
             android:summary="@string/pref_default_kiosk_slogan"
             android:title="@string/pref_title_kiosk_slogan" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_data">
         <Preference
             android:defaultValue="5"
             android:key="@string/pref_key_default_data"
             android:title="@string/pref_title_default_data" />
-        <com.juangnakarani.kiosk.preference.DialogBackupPreference android:key="pref_dialog_backup"
+        <com.juangnakarani.kiosk.preference.DialogBackupPreference
+            android:key="pref_dialog_backup"
             android:title="Backup"></com.juangnakarani.kiosk.preference.DialogBackupPreference>
+        <Preference
+            android:defaultValue="123"
+            android:key="@string/pref_key_transaction_pooling"
+            android:title="@string/pref_title_transaction_pooling" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_header_device">
+    <PreferenceCategory android:title="@string/pref_header_printer">
         <Preference
             android:defaultValue="123"
             android:key="@string/pref_key_printer"
@@ -55,6 +62,10 @@
                 android:targetClass="com.juangnakarani.kiosk.PrinterActivity"
                 android:targetPackage="com.juangnakarani.kiosk" />
         </Preference>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_print_copy_nota"
+            android:title="@string/pref_title_print_copy_nota" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_server">
         <EditTextPreference
@@ -74,13 +85,13 @@
             android:title="@string/pref_title_email" />
         <EditTextPreference
             android:defaultValue="@string/pref_default_password"
+            android:inputType="textPassword"
             android:key="@string/pref_key_password"
             android:summary="@string/pref_default_password"
-            android:inputType="textPassword"
             android:title="@string/pref_title_password" />
         <Preference
             android:defaultValue="123"
-            android:key="@string/pref_key_transaction_pooling"
-            android:title="@string/pref_title_transaction_pooling" />
+            android:key="@string/pref_key_logout"
+            android:title="@string/pref_title_logout" />
     </PreferenceCategory>
 </PreferenceScreen>
