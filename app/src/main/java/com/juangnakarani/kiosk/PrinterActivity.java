@@ -3,15 +3,18 @@ package com.juangnakarani.kiosk;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 //import android.util.Log;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.juangnakarani.kiosk.adapter.DeviceAdapter;
 import com.juangnakarani.kiosk.model.Device;
@@ -38,12 +41,23 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, mRecyclerView, new IClickListener() {
             @Override
             public void onClick(View view, int position) {
-//                Log.i("chk", "onClick mRecyclerView");
+                Log.d("chk", "onClick mRecyclerView");
+                Toast.makeText(PrinterActivity.this, "Long click for select this device!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onLongClick(View view, int position) {
-//                Log.i("chk", "onLongClick mRecyclerView");
+                Log.d("chk", "onLongClick mRecyclerView");
+                Device d = devices.get(position);
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(getString(R.string.pref_key_printer), d.getAddress());
+                editor.commit();
+
+                String defaultValue = getResources().getString(R.string.pref_key_printer);
+                String printerValue = sharedPref.getString(getString(R.string.pref_key_printer), defaultValue);
+
+                Toast.makeText(PrinterActivity.this, "Selected printer: " +d.getName()+ " (" + printerValue + ")", Toast.LENGTH_LONG).show();
             }
         }));
 

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -231,9 +232,12 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 }
                 List<TransactionDetail> transactionDetails = db.getTransactionDetailByID(th_id);
 //                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
-
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                String defaultValue = getResources().getString(R.string.pref_key_printer);
+                String printerValue = sharedPref.getString(getString(R.string.pref_key_printer), defaultValue);
+                
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                mBluetoothDevice = mBluetoothAdapter.getRemoteDevice("DC:0D:30:2B:3E:04");
+                mBluetoothDevice = mBluetoothAdapter.getRemoteDevice(printerValue);
 
                 mBluetoothConnectProgressDialog = ProgressDialog.show(view.getContext(),
                         "Connecting...", mBluetoothDevice.getName() + " : "
