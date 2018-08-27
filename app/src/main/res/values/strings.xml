@@ -49,6 +49,7 @@
 
     <string name="pref_header_printer">Printer</string>
     <string name="pref_key_printer">pref_key_printer</string>
+    <string name="pref_default_printer"></string>
     <string name="pref_title_printer">Paired Device</string>
 
     <string name="pref_key_print_copy_nota">pref_key_print_copy_nota</string>

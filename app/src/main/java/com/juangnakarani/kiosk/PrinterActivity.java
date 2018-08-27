@@ -37,7 +37,7 @@ public class PrinterActivity extends AppCompatActivity implements IClickListener
         setContentView(R.layout.activity_printer);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences("preference", Context.MODE_PRIVATE);
         mRecyclerView = (RecyclerView) findViewById(R.id.rclv_devices);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(this, mRecyclerView, new IClickListener() {

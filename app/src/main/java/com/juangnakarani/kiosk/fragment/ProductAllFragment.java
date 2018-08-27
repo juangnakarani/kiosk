@@ -18,6 +18,7 @@ import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.adapter.ProductAdapter;
 import com.juangnakarani.kiosk.database.DbHelper;
 import com.juangnakarani.kiosk.model.Category;
+import com.juangnakarani.kiosk.model.DataChangeEvent;
 import com.juangnakarani.kiosk.model.ViewPagerEvent;
 import com.juangnakarani.kiosk.model.Product;
 
@@ -125,6 +126,17 @@ public class ProductAllFragment extends Fragment {
         transactionOrigin = event.tabPosition;
 
         if (event.tabPosition == 0) {
+            products.clear();
+            mProductAdapter.notifyDataSetChanged();
+            new AsyncGetProductOperation().execute();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DataChangeEvent event) {
+        Log.d("chk", "evenbus is data change?: " + event.notifyEvent);
+
+        if (event.notifyEvent == 1) {
             products.clear();
             mProductAdapter.notifyDataSetChanged();
             new AsyncGetProductOperation().execute();

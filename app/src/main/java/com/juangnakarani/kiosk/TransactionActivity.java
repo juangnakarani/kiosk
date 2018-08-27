@@ -34,18 +34,12 @@ import com.juangnakarani.kiosk.model.TransactionHeader;
 import com.juangnakarani.kiosk.model.User;
 import com.juangnakarani.kiosk.other.UnicodeFormatter;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,7 +61,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     private CheckBox mUangPas;
     private String totalText;
     private Button mPrint;
-
+    private SharedPreferences sharedPref;
     private BluetoothSocket mBluetoothSocket;
     BluetoothDevice mBluetoothDevice;
     BluetoothAdapter mBluetoothAdapter;
@@ -87,13 +81,13 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 
         transactionEvent = 0;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        prefKioskName = prefs.getString("pref_key_kiosk_name","Not Found pref_key_kiosk_name");
-        prefKioskAddress = prefs.getString("pref_key_kiosk_address","Not Found pref_key_kiosk_address");
-        prefKioskPhone = prefs.getString("pref_key_kiosk_phone","Not Found pref_key_kiosk_phone");
-        prefKioskSlogan = prefs.getString("pref_key_kiosk_slogan","Not Found pref_key_kiosk_slogan");
-        prefKioskEmail = prefs.getString("pref_key_email","Not Found pref_key_email");
-        prefKioskPassword = prefs.getString("pref_key_password","Not Found pref_key_password");
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefKioskName = sharedPref.getString("pref_key_kiosk_name", "Not Found pref_key_kiosk_name");
+        prefKioskAddress = sharedPref.getString("pref_key_kiosk_address", "Not Found pref_key_kiosk_address");
+        prefKioskPhone = sharedPref.getString("pref_key_kiosk_phone", "Not Found pref_key_kiosk_phone");
+        prefKioskSlogan = sharedPref.getString("pref_key_kiosk_slogan", "Not Found pref_key_kiosk_slogan");
+        prefKioskEmail = sharedPref.getString("pref_key_email", "Not Found pref_key_email");
+        prefKioskPassword = sharedPref.getString("pref_key_password", "Not Found pref_key_password");
 
         User user = new User("rizki.prisandi@gmail.com", "da9fdb45ec38a06c538689814f069341c95985577c5524c1fe67f991d2a8f52c");
 //        Log.i("passwd" , user.getPassword());
@@ -109,18 +103,18 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 
         //convert the byte to hex format method 2
         StringBuffer hexString = new StringBuffer();
-        for (int i=0;i<byteData.length;i++) {
-            String hex=Integer.toHexString(0xff & byteData[i]);
-            if(hex.length()==1) hexString.append('0');
+        for (int i = 0; i < byteData.length; i++) {
+            String hex = Integer.toHexString(0xff & byteData[i]);
+            if (hex.length() == 1) hexString.append('0');
             hexString.append(hex);
         }
 
 //        Log.i("passwd h" , hexString.toString());
 //        Log.i("passwd u" , user.getPassword());
-        if(prefKioskEmail.equals(user.getEmail()) && hexString.toString().equals(user.getPassword())){
+        if (prefKioskEmail.equals(user.getEmail()) && hexString.toString().equals(user.getPassword())) {
 //            Log.i("passwd", "login success");
             isAuthenticate = true;
-        }else{
+        } else {
 //            Log.i("passwd", "login fail");
             isAuthenticate = false;
         }
@@ -149,7 +143,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 
         mReceived = findViewById(R.id.amount_received);
         mReceived.requestFocus();
-        mUangPas =  findViewById(R.id.check_uang_pas);
+        mUangPas = findViewById(R.id.check_uang_pas);
         mUangPas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,18 +160,18 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 //                Log.i("chk","receive changed");
-                try{
-                    Log.d("chk","receive->" + mReceived.getText().toString().replace(",", ""));
+                try {
+                    Log.d("chk", "receive->" + mReceived.getText().toString().replace(",", ""));
 
                     receivedAmount = Integer.parseInt(mReceived.getText().toString().replace(",", ""));
-                }catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     Log.e("chk", ex.toString());
                     receivedAmount = 0;
                 }
-                if(receivedAmount == total){
+                if (receivedAmount == total) {
 //                    Log.i("chk","receive receivedAmount == total");
                     mUangPas.setChecked(true);
-                }else{
+                } else {
                     mUangPas.setChecked(false);
                 }
             }
@@ -193,7 +187,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         mPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isAuthenticate){
+                if (!isAuthenticate) {
                     Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -206,12 +200,12 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 //                    receivedAmount = 0;
 //                }
 
-                if(receivedAmount==0){
+                if (receivedAmount == 0) {
                     Toast.makeText(view.getContext(), "Isikan jumlah dibayar!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(receivedAmount<total){
+                if (receivedAmount < total) {
                     Toast.makeText(view.getContext(), "Kurang bayar!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -226,16 +220,20 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 TransactionHeader th = new TransactionHeader(currentTime.toString(), total, receivedAmount);
                 long th_id = db.insertTransactionHeader(th);
 //                    Log.i("chk","insertTransactionHeader->" + th_id);
-                for(Product p : products){
+                for (Product p : products) {
 //                        Log.i("chk","products->" + p.getCategory().getId());
                     db.insertTransactionDetail(th_id, p);
                 }
                 List<TransactionDetail> transactionDetails = db.getTransactionDetailByID(th_id);
+                db.setTransactionState(1);
+                transactionEvent = 1;
 //                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
-                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                String defaultValue = getResources().getString(R.string.pref_key_printer);
-                String printerValue = sharedPref.getString(getString(R.string.pref_key_printer), defaultValue);
 
+                String defaultValue = getResources().getString(R.string.pref_key_printer);
+//                String printerValue = sharedPref.getString("pref_key_printer", "not found device address");
+                SharedPreferences sharedPref = getSharedPreferences("preference", Context.MODE_PRIVATE);
+                String printerValue = sharedPref.getString("pref_key_printer", "not found device address");
+                Log.d("chk device", printerValue);
                 mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 mBluetoothDevice = mBluetoothAdapter.getRemoteDevice(printerValue);
 
@@ -267,7 +265,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                     + prefKioskName + "    \n"
                                     + prefKioskSlogan + " \n"
                                     + prefKioskAddress + "  \n"
-                                    + prefKioskPhone +"      \n"
+                                    + prefKioskPhone + "      \n"
                                     + String.format("%32s", datePrint) + "\n";
                             BILL = BILL + "--------------------------------\n";
 
@@ -278,18 +276,18 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                             for (Product p : products) {
                                 String item = p.getName().toString();
                                 String ordered = String.valueOf(p.getOrdered());
-                                String price = String.valueOf(p.getPrice());
+                                String price = formatRupiah(p.getPrice());
                                 BigDecimal total = p.getPrice().multiply(BigDecimal.valueOf(p.getOrdered()));
                                 BILL = BILL + "\n " + String.format("%1$-10s", "" + item);
-                                BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$14s", ordered, price, total.toString());
+                                BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$14s", ordered, formatRupiah(price), formatRupiah(total));
                             }
                             BILL = BILL + "\n--------------------------------";
                             BILL = BILL + "\n";
                             BILL = BILL + String.format("%1$-8s %2$22s", "Total", totalText);
                             BILL = BILL + "\n";
-                            BILL = BILL + String.format("%1$-8s %2$22s", "Diterima", receivedAmount);
+                            BILL = BILL + String.format("%1$-8s %2$22s", "Diterima", formatRupiah(receivedAmount));
                             BILL = BILL + "\n";
-                            BILL = BILL + String.format("%1$-8s %2$22s", "Kembali", changeAmount);
+                            BILL = BILL + String.format("%1$-8s %2$22s", "Kembali", formatRupiah(changeAmount));
                             BILL = BILL + "\n";
                             BILL = BILL + "\n";
 //                            BILL = BILL + "        Total Value:" + "     " + "700.00" + "\n";
@@ -336,8 +334,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 //                    Log.i("chk","thread has not finished");
                 } else {
 //                    Log.i("chk","thread has finished");
-                    db.setTransactionState(1);
-                    transactionEvent = 1;
+
 
                     try {
                         t.join();
@@ -351,10 +348,9 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        Log.i("chk", "nganu onActivityResult TransactionActivity");
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         for (android.support.v4.app.Fragment fragment : getSupportFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
@@ -364,7 +360,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
         @Override
         public void handleMessage(Message msg) {
             mBluetoothConnectProgressDialog.dismiss();
-            Toast.makeText(TransactionActivity.this, "DeviceConnected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(TransactionActivity.this, "Device Connected", Toast.LENGTH_SHORT).show();
         }
     };
 

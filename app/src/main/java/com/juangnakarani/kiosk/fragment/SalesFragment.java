@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import com.juangnakarani.kiosk.R;
 import com.juangnakarani.kiosk.TransactionActivity;
 import com.juangnakarani.kiosk.database.DbHelper;
+import com.juangnakarani.kiosk.model.DataChangeEvent;
 import com.juangnakarani.kiosk.model.ViewPagerEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -151,13 +152,15 @@ public class SalesFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i("chk", "onResume of Sales Fragment");
+        Log.d("chk", "onResume of Sales Fragment");
         super.onResume();
 
         int tr_state = db.getTrasactionState();
         if (tr_state == 1) {
             db.clearTransaction();
             int i = db.setTransactionState(0);
+//            TODO push notifyDataChanged
+            EventBus.getDefault().post(new DataChangeEvent(1));
 
         }
     }

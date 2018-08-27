@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        sharedPref = getPreferences(Context.MODE_PRIVATE);
         String kioskName = sharedPref.getString(getString(R.string.pref_key_kiosk_name), "Not found Kiosk name");
         this.setTitle(kioskName);
 
