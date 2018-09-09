@@ -227,9 +227,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                 List<TransactionDetail> transactionDetails = db.getTransactionDetailByID(th_id);
                 db.setTransactionState(1);
                 transactionEvent = 1;
-//                    Log.i("chk","transactionDetails size->" + transactionDetails.size());
 
-                String defaultValue = getResources().getString(R.string.pref_key_printer);
 //                String printerValue = sharedPref.getString("pref_key_printer", "not found device address");
                 SharedPreferences sharedPref = getSharedPreferences("preference", Context.MODE_PRIVATE);
                 String printerValue = sharedPref.getString("pref_key_printer", "not found device address");
@@ -242,13 +240,14 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                 + mBluetoothDevice.getAddress(), true, false);
 
                 try {
+                    Log.d("chk", "createRfcommSocketToServiceRecord");
                     mBluetoothSocket = mBluetoothDevice
                             .createRfcommSocketToServiceRecord(applicationUUID);
                     mBluetoothAdapter.cancelDiscovery();
                     mBluetoothSocket.connect();
                     mHandler.sendEmptyMessage(0);
                 } catch (IOException e) {
-//                    Log.e("chk IOException", "CouldNotConnectToSocket", e);
+                    Log.d("chk IOException", "CouldNotConnectToSocket", e);
                     Toast.makeText(TransactionActivity.this, "Device Not Connected", Toast.LENGTH_LONG).show();
                     closeSocket(mBluetoothSocket);
                     return;
@@ -269,7 +268,6 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                     + String.format("%32s", datePrint) + "\n";
                             BILL = BILL + "--------------------------------\n";
 
-
                             BILL = BILL + String.format("%1$-4s %2$10s %3$14s", "Qty", "Price", "Total");
                             BILL = BILL + "\n";
                             BILL = BILL + "--------------------------------";
@@ -279,7 +277,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                                 String price = formatRupiah(p.getPrice());
                                 BigDecimal total = p.getPrice().multiply(BigDecimal.valueOf(p.getOrdered()));
                                 BILL = BILL + "\n " + String.format("%1$-10s", "" + item);
-                                BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$14s", ordered, formatRupiah(price), formatRupiah(total));
+                                BILL = BILL + "\n " + String.format("%1$-4s %2$10s %3$14s", ordered, price, formatRupiah(total));
                             }
                             BILL = BILL + "\n--------------------------------";
                             BILL = BILL + "\n";
@@ -317,7 +315,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
                             os.write(open);
 
                         } catch (Exception e) {
-//                            Log.e("chk print", "printing ", e);
+                            Log.e("chk print", "printing Exception", e);
                         }
                     }
                 };
@@ -395,7 +393,7 @@ public class TransactionActivity extends AppCompatActivity implements Runnable {
 
     @Override
     public void run() {
-//        Log.i("chkRun", "run form Runnable");
+        Log.d("chk run", "run form Runnable");
         try {
             mBluetoothSocket = mBluetoothDevice
                     .createRfcommSocketToServiceRecord(applicationUUID);
