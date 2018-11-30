@@ -17,6 +17,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DialogBackupPreference extends DialogPreference {
     public DialogBackupPreference(Context context, AttributeSet attrs) {
@@ -45,17 +48,24 @@ public class DialogBackupPreference extends DialogPreference {
     private void doBackup(){
         Log.e("chk","doBackup()");
         Log.e("chk",getContext().getPackageName());
+
         File sd = Environment.getExternalStorageDirectory();
+        File sdKioskDir = new File(sd,getContext().getPackageName().concat("/BackupDB"));
+        sdKioskDir.mkdirs();
+
         File data = Environment.getDataDirectory();
-        FileChannel source=null;
-        FileChannel destination=null;
-        String currentDBPath = "/data/"+ getContext().getPackageName() + "/databases/Kiosk.db";
-        String backupDBPath = "/Kiosbak.db";
+
+        String currentDBPath = "/data/".concat(getContext().getPackageName()).concat("/databases/Kiosk.db");
         File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, backupDBPath);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
+        String dbName = "/Kiosk".concat(sdf.format(date)).concat(".db");
+        String backupDBPath =  getContext().getPackageName().concat("/BackupDB").concat(dbName);
+        File backupDB = new File(sd , backupDBPath);
+
         try {
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
+            FileChannel source = new FileInputStream(currentDB).getChannel();
+            FileChannel destination = new FileOutputStream(backupDB).getChannel();
             destination.transferFrom(source, 0, source.size());
             source.close();
             destination.close();
